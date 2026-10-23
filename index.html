@@ -118,7 +118,14 @@ select.per { font: inherit; font-size: 14px; color: var(--ink); background: var(
 /* expense lists */
 .split { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 24px; align-items: start; }
 .split .cover { margin-top: 0; }
-.bridge { padding: 18px; background: var(--bg); border-radius: var(--radius); display: grid; gap: 4px; }
+.bridge { padding: 18px; background: var(--bg); border-radius: var(--radius); display: grid; gap: 4px; max-width: 560px; margin: 22px 0 0 auto; }
+.studio-note { padding: 18px 20px; background: var(--warn-soft); border-radius: var(--radius); display: grid; gap: 8px; font-size: 15px; }
+.studio-note h3 { color: var(--ink); }
+.studio-note ul { margin: 0; padding-left: 20px; display: grid; gap: 2px; }
+.next-step { position: relative; overflow: hidden; isolation: isolate; background: var(--mast); color: var(--mast-ink); border-radius: 22px; padding: clamp(22px, 4vw, 36px); display: grid; gap: 10px; }
+.next-step h2 { color: var(--mast-ink); padding-right: 70px; }
+.next-step p { max-width: 62ch; opacity: .9; font-size: 17px; }
+.next-step .s-sun { width: 140px; height: 140px; right: -50px; top: -50px; }
 .bridge .ln { display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; font-size: 14px; font-variant-numeric: tabular-nums; }
 .bridge .ln strong { white-space: nowrap; }
 .bridge .ln.sum { border-top: 2px solid var(--ink); margin-top: 4px; padding-top: 10px; font-weight: 700; }
@@ -251,6 +258,10 @@ footer { color: var(--muted); font-size: 13px; text-align: center; }
 .masthead .hdr-actions { position: relative; }
 .masthead .btn { background: var(--mast-ink); color: var(--mast); border-color: var(--mast-ink); font-weight: 600; }
 .masthead .confirm { color: var(--mast-ink); background: var(--mast); padding: 6px 10px; border-radius: 10px; }
+.reset-confirm { display: grid; gap: 10px; max-width: 300px; font-weight: 500; }
+.confirm-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.masthead .btn.ghost { background: transparent; color: var(--mast-ink); border-color: var(--mast-ink); }
+.reset-done { font-weight: 600; color: var(--mustard) !important; }
 
 .panel { border: 0; box-shadow: 0 1px 0 var(--line), 0 0 0 1px var(--line); padding: clamp(18px, 3vw, 30px); }
 .section-head { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: start; gap: 16px; margin-bottom: 22px; padding-bottom: 18px; border-bottom: 1px solid var(--line); }
@@ -368,10 +379,10 @@ footer { padding-top: 8px; }
         <h3>How to use it (about 30 minutes)</h3>
         <ol>
           <li>Start with why: list your personal monthly costs and choose how much of them your art should cover. That's your income goal.</li>
+          <li>List your business expenses, so they're done. Use “per year” for things like insurance. Home studio costs stay in your personal expenses.</li>
           <li>Set your hourly rate, profit margin and the studio hours you really have each week.</li>
-          <li>Add your pieces with their price, direct costs and time. Estimates are fine. The two examples show how it works.</li>
-          <li>See what each piece contributes every month.</li>
-          <li>List your business expenses. Use “per year” for things like insurance. They come out of what your pieces bring in, and what's left goes toward your income goal.</li>
+          <li>Add your pieces with their price, direct costs, time and how many you can make each month. Estimates are fine. The two examples show how it works.</li>
+          <li>See what each piece contributes, and what's left toward your income goal after business expenses.</li>
           <li>Check your month and whether your goal fits your hours.</li>
         </ol>
       </div>
@@ -387,7 +398,7 @@ footer { padding-top: 8px; }
       <div>
         <h3>A few terms</h3>
         <p><strong>Direct costs:</strong> costs that come with each piece you sell (materials, packaging, fees, firing).</p>
-        <p><strong>Overhead:</strong> costs you pay every month even if you sell nothing. Split across every piece you sell.</p>
+        <p><strong>Overhead:</strong> costs you pay every month even if you sell nothing. Split across every piece you make.</p>
         <p><strong>What's left:</strong> price minus direct costs. This pays your overhead, then pays you.</p>
         <p><strong>Profit Price:</strong> the price that covers your costs, pays your hourly rate, covers your share of overhead, and adds your profit margin.</p>
         <p><strong>Price to fit your hours:</strong> the lowest price that reaches your income goal if you fill your studio hours with that piece.</p>
@@ -421,8 +432,32 @@ footer { padding-top: 8px; }
     </div>
   </section>
 
+  <section class="panel" aria-labelledby="biz-h">
+    <div class="section-head"><span class="step c2" aria-hidden="true">2</span><div class="sh-text"><span class="eyebrow">Step 2</span><h2 id="biz-h">Your business expenses</h2><p>Costs you pay every month even if you sell nothing. Get them done now, so every price after this includes them.</p></div></div>
+    <div class="split">
+      <div>
+        <div class="exp-list" id="list-biz"></div>
+        <button class="exp-add" data-act="add-exp" data-list="biz">+ Add an expense</button>
+        <div class="total-line"><span>Monthly business overhead</span><strong id="biz-total"></strong></div>
+      </div>
+      <div class="studio-note">
+        <h3>Work from a home studio?</h3>
+        <p>Your rent or mortgage, utilities and internet are already in your personal expenses in Step 1. Don't count them again here.</p>
+        <p>Business expenses are only the extra costs your art business adds, such as:</p>
+        <ul>
+          <li>Additional insurance</li>
+          <li>Advertising</li>
+          <li>A dedicated phone line</li>
+          <li>Marketing materials</li>
+          <li>Website, software and booth fees</li>
+        </ul>
+        <p>Leave out materials and packaging. Those go with each piece in Step 4.</p>
+      </div>
+    </div>
+  </section>
+
   <section class="panel" aria-labelledby="settings-h">
-    <div class="section-head"><span class="step c2" aria-hidden="true">2</span><div class="sh-text"><span class="eyebrow">Step 2</span><h2 id="settings-h">Your rate and your time</h2><p>These apply to every piece.</p></div></div>
+    <div class="section-head"><span class="step c3" aria-hidden="true">3</span><div class="sh-text"><span class="eyebrow">Step 3</span><h2 id="settings-h">Your rate and your time</h2><p>These apply to every piece.</p></div></div>
     <div class="settings">
       <div class="field">
         <label for="s-rate">Hourly rate you want</label>
@@ -443,7 +478,7 @@ footer { padding-top: 8px; }
   </section>
 
   <section aria-labelledby="pieces-h" class="panel">
-    <div class="section-head"><span class="step c3" aria-hidden="true">3</span><div class="sh-text"><span class="eyebrow">Step 3</span><h2 id="pieces-h">Your pieces</h2><p>Start with your bestseller, a piece you love, and one you suspect isn't pulling its weight.</p></div></div>
+    <div class="section-head"><span class="step c0" aria-hidden="true">4</span><div class="sh-text"><span class="eyebrow">Step 4</span><h2 id="pieces-h">Your pieces</h2><p>Start with your bestseller, a piece you love, and one you suspect isn't pulling its weight.</p></div></div>
     <div class="bench">
       <nav class="shelf" id="shelf" aria-label="Pieces"></nav>
       <div class="editor">
@@ -451,48 +486,43 @@ footer { padding-top: 8px; }
         <div class="results" id="results" aria-live="polite"></div>
       </div>
     </div>
-    <p class="note step-note">Have business overhead like a website, software, insurance or ads? Add it in <a href="#biz-h">Step 5</a>. Each piece's verdict and Profit Price include its share, so these results will update.</p>
+    <p class="note step-note">Each piece's verdict and Profit Price include its share of your business expenses from <a href="#biz-h">Step 2</a>. Change those and these results update.</p>
   </section>
 
   <section class="panel" aria-labelledby="compare-h">
-    <div class="section-head"><span class="step c0" aria-hidden="true">4</span><div class="sh-text"><span class="eyebrow">Step 4</span><h2 id="compare-h">What each piece contributes</h2><p>Tap a row to edit that piece.</p></div></div>
+    <div class="section-head"><span class="step c1" aria-hidden="true">5</span><div class="sh-text"><span class="eyebrow">Step 5</span><h2 id="compare-h">What each piece contributes</h2><p>What your pieces leave after their costs, minus your business expenses, is what goes toward the income you'd love. Tap a row to edit that piece.</p></div></div>
     <div class="table-wrap"><table id="compare"></table></div>
-  </section>
-
-  <section class="panel" aria-labelledby="biz-h">
-    <div class="section-head"><span class="step c1" aria-hidden="true">5</span><div class="sh-text"><span class="eyebrow">Step 5</span><h2 id="biz-h">Your business expenses</h2><p>Costs you pay even if you sell nothing. Business share only, no materials. These come out before you get paid.</p></div></div>
-    <div class="split">
-      <div>
-        <div class="exp-list" id="list-biz"></div>
-        <button class="exp-add" data-act="add-exp" data-list="biz">+ Add an expense</button>
-        <div class="total-line"><span>Monthly business overhead</span><strong id="biz-total"></strong></div>
-      </div>
-      <div class="bridge" id="bridge"></div>
-    </div>
+    <div class="bridge" id="bridge"></div>
   </section>
 
   <div class="lower">
     <section class="panel" aria-labelledby="month-h">
-      <div class="section-head"><span class="step c2" aria-hidden="true">6</span><div class="sh-text"><span class="eyebrow">Step 6</span><h2 id="month-h">Your month at a glance</h2><p>Selling what you sell now.</p></div></div>
+      <div class="section-head"><span class="step c2" aria-hidden="true">6</span><div class="sh-text"><span class="eyebrow">Step 6</span><h2 id="month-h">Your month at a glance</h2><p>If you sell everything you make.</p></div></div>
       <div id="month"></div>
-      <p class="note">The Profit Price assumes you'd sell the same number of pieces. Test a new price on your next few sales before you change everything.</p>
+      <p class="note">The Profit Price assumes you make and sell the same number of pieces. Test a new price on your next few sales before you change everything.</p>
     </section>
 
     <section class="panel" aria-labelledby="goal-h">
       <div class="section-head"><span class="step c3" aria-hidden="true">7</span><div class="sh-text"><span class="eyebrow">Step 7</span><h2 id="goal-h">Goal check: can you make it in your hours?</h2><p id="need"></p></div></div>
       <div id="capacity"></div>
       <div class="table-wrap"><table id="goal"></table></div>
-      <p class="note">“Your current mix” scales up the pieces you sell now in the same proportions. Each other row asks: if you sold only this piece, what would it take? Over your hours? The answer is price, a faster process, or a different mix of pieces, not working harder. And check you can find that many buyers.</p>
+      <p class="note">“Your current mix” scales up the pieces you make now in the same proportions. Each other row asks: if you sold only this piece, what would it take? Over your hours? The answer is price, a faster process, or a different mix of pieces, not working harder. And check you can find that many buyers.</p>
     </section>
   </div>
 
+
+  <section class="next-step" aria-labelledby="next-h">
+    <span class="shape s-sun" aria-hidden="true"></span>
+    <h2 id="next-h">Your next step: a plan to sell what you make</h2>
+    <p>This calculator assumes you sell everything you make. That's the goal. Your work now is to create a marketing plan that sells what you make.</p>
+  </section>
 
   <footer>A planning tool, not tax or accounting advice. Your numbers are saved in this browser only.</footer>
 </div>
 
 <script>
 (function () {
-  const STORE_KEY = "pae-v2b";
+  const STORE_KEY = "pae-v2c";
   const OLD_KEY = "pae-v1";
   const MAX_PIECES = 12;
   const WEEKS_PER_MONTH = 52 / 12;
@@ -501,7 +531,7 @@ footer { padding-top: 8px; }
     { group: "The basics", items: [
       { k: "name", label: "Piece name", type: "text", wide: true },
       { k: "price", label: "Current selling price", pre: "$" },
-      { k: "sold", label: "Typical number sold per month", post: "/month" }
+      { k: "sold", label: "How many you can make per month", post: "/month", hint: "We assume you sell what you make. That's the goal." }
     ]},
     { group: "Direct costs per piece", items: [
       { k: "materials", label: "Materials & supplies", pre: "$", hint: "Glass, clay, metal, paint, etc." },
@@ -524,8 +554,8 @@ footer { padding-top: 8px; }
   const EXAMPLES = () => ({
     settings: { rate: 30, margin: 10, cover: 60, tax: 0, hours: 20 },
     biz: [
-      exp("Website & domain", 0), exp("Software & apps", 0), exp("Insurance", 0, "year"),
-      exp("Ads & marketing", 0), exp("Studio share of utilities", 0)
+      exp("Additional insurance", 0, "year"), exp("Advertising", 0), exp("Dedicated phone line", 0),
+      exp("Marketing materials", 0), exp("Website & domain", 0), exp("Software & apps", 0)
     ],
     personal: [
       exp("Rent or mortgage", 0), exp("Groceries", 0), exp("Utilities", 0), exp("Car & transport", 0),
@@ -634,7 +664,7 @@ footer { padding-top: 8px; }
   };
 
   const $ = id => document.getElementById(id);
-  let confirmDelete = false, confirmReset = false;
+  let confirmDelete = false, confirmReset = false, justReset = false;
 
   function current() {
     if (state.selected >= state.pieces.length) state.selected = state.pieces.length - 1;
@@ -739,7 +769,7 @@ footer { padding-top: 8px; }
         <div><dt>Total hours per piece</dt><dd>${hrs(r.hours)}</dd></div>
         <div><dt>Most you can make in your hours</dt><dd>${maxWeek === null ? "—" : maxWeek.toLocaleString() + " a week"}</dd></div>
         <div><dt>Time earns per hour, before overhead</dt><dd>${money(r.perHr)}</dd></div>
-        <div><dt>This piece's share of overhead${c.s.overhead > 0 ? "" : ' <span style="font-size:12px">(add in Step 5)</span>'}</dt><dd>${money(r.share)}</dd></div>
+        <div><dt>This piece's share of overhead${c.s.overhead > 0 ? "" : ' <span style="font-size:12px">(add in Step 2)</span>'}</dt><dd>${money(r.share)}</dd></div>
         <div class="strong"><dt>Time REALLY earns per hour</dt><dd class="${r.realHr < 0 ? "neg" : ""}">${money(r.realHr)}</dd></div>
         ${r.ppValid ? `<div><dt>What's left at your Profit Price</dt><dd>${money(r.leftAtPP)}</dd></div>` : ""}
       </dl>`;
@@ -747,7 +777,7 @@ footer { padding-top: 8px; }
 
   function renderCompare(c) {
     $("compare").innerHTML = `
-      <thead><tr><th>Piece</th><th>Price</th><th>Sold/mo</th><th>Left per sale</th><th>Contributes /month</th><th>Real $/hour</th><th>Profit Price</th><th>Change</th><th>Verdict</th></tr></thead>
+      <thead><tr><th>Piece</th><th>Price</th><th>Made/mo</th><th>Left per sale</th><th>Contributes /month</th><th>Real $/hour</th><th>Profit Price</th><th>Change</th><th>Verdict</th></tr></thead>
       <tbody>${c.rows.map((r, i) => r.empty
         ? `<tr class="clickable" data-select="${i}"><td>${esc(r.p.name || "Untitled piece")}</td><td colspan="8" style="text-align:left;color:var(--muted)">Add a price to include this piece</td></tr>`
         : `<tr class="clickable" data-select="${i}">
@@ -770,8 +800,8 @@ footer { padding-top: 8px; }
     const gap = s.goal - toward;
     $("bridge").innerHTML = `
       <h3>What's left for you</h3>
-      <div class="ln"><span>Your pieces contribute (Step 4)</span><strong>${money(m.left)}</strong></div>
-      <div class="ln"><span>Minus business expenses</span><strong>${money(-s.overhead)}</strong></div>
+      <div class="ln"><span>Your pieces contribute (table above)</span><strong>${money(m.left)}</strong></div>
+      <div class="ln"><span>Minus business expenses (Step 2)</span><strong>${money(-s.overhead)}</strong></div>
       <div class="ln sum"><span>Toward your income goal</span><strong class="${toward < 0 ? "neg" : ""}">${money(toward)}</strong></div>
       <div class="ln"><span>Your income goal (Step 1)</span><strong>${money(s.goal)}</strong></div>
       <div class="gauge ${share >= 1 ? "keeper" : share >= 0.6 ? "raise" : "rethink"}">
@@ -799,7 +829,7 @@ footer { padding-top: 8px; }
           <div><dt>Compared with your income goal</dt><dd class="${toGoal < 0 ? "neg" : "pos"}">${toGoal < 0 ? money(-toGoal) + " short" : money(toGoal) + " over"}</dd></div>
         </dl>
         <dl class="rows">
-          <div><dt>Hours per month to make &amp; sell these</dt><dd>${hrs(m.hours)}</dd></div>
+          <div><dt>Hours per month to make these</dt><dd>${hrs(m.hours)}</dd></div>
           <div><dt>Hours you have per month</dt><dd>${hrs(s.hoursMonth)}</dd></div>
           <div><dt>${spare >= 0 ? "Hours to spare" : "Hours over your limit"}</dt><dd class="${spare < 0 ? "neg" : ""}">${hrs(Math.abs(spare))}</dd></div>
           <div><dt>What you're really earning per hour now</dt><dd>${money(m.realHr)}</dd></div>
@@ -844,8 +874,8 @@ footer { padding-top: 8px; }
       const top = Math.max(mix.hoursWeek, s.hoursWeek, 1) * 1.1;
       const fillW = Math.min(100, mix.hoursWeek / top * 100), tick = s.hoursWeek / top * 100;
       const what = mix.fits
-        ? `You'd need about <strong>${hrs(mix.hoursWeek)}</strong> a week, selling ${mix.perWeek.toLocaleString()} pieces a week in the same mix you sell now. That fits in your ${hrs(s.hoursWeek)}.`
-        : `You'd need about <strong>${hrs(mix.hoursWeek)}</strong> a week, selling ${mix.perWeek.toLocaleString()} pieces a week in the same mix you sell now. You have ${hrs(s.hoursWeek)}, so that's ${hrs(mix.hoursWeek - s.hoursWeek)} more than you can give. ${mix.raise !== null ? `To reach your goal inside your hours, raise all your prices by about <strong>${Math.ceil(mix.raise * 100)}%</strong>, or switch toward pieces that fit below.` : ""}`;
+        ? `You'd need about <strong>${hrs(mix.hoursWeek)}</strong> a week, selling ${mix.perWeek.toLocaleString()} pieces a week in the same mix you make now. That fits in your ${hrs(s.hoursWeek)}.`
+        : `You'd need about <strong>${hrs(mix.hoursWeek)}</strong> a week, selling ${mix.perWeek.toLocaleString()} pieces a week in the same mix you make now. You have ${hrs(s.hoursWeek)}, so that's ${hrs(mix.hoursWeek - s.hoursWeek)} more than you can give. ${mix.raise !== null ? `To reach your goal inside your hours, raise all your prices by about <strong>${Math.ceil(mix.raise * 100)}%</strong>, or switch toward pieces that fit below.` : ""}`;
       card = `
         <div class="capacity ${mix.fits ? "fits" : "over"}">
           <h3>Your current mix</h3>
@@ -885,8 +915,10 @@ footer { padding-top: 8px; }
 
   function renderReset() {
     $("reset-area").innerHTML = confirmReset
-      ? `<span class="confirm">Clear everything and go back to the examples? <button class="btn small danger" data-act="reset-yes">Start over</button><button class="btn small" data-act="reset-no">Cancel</button></span>`
-      : `<button class="btn" data-act="reset">Start over</button>`;
+      ? `<span class="confirm reset-confirm">Erase all your numbers and go back to the examples? <span class="confirm-btns"><button class="btn small" data-act="reset-yes">Yes, erase everything</button><button class="btn small ghost" data-act="reset-no">Cancel</button></span></span>`
+      : justReset
+        ? `<span class="confirm reset-done" role="status">Cleared. You're back to the examples.</span>`
+        : `<button class="btn" data-act="reset">Start over</button>`;
   }
 
   function renderOutputs() {
@@ -941,7 +973,11 @@ footer { padding-top: 8px; }
     }
     else if (act === "reset") { confirmReset = true; renderReset(); }
     else if (act === "reset-no") { confirmReset = false; renderReset(); }
-    else if (act === "reset-yes") { state = EXAMPLES(); confirmReset = false; save(); renderAll(); }
+    else if (act === "reset-yes") {
+      state = EXAMPLES(); confirmReset = false; justReset = true; save(); renderAll();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      setTimeout(() => { justReset = false; renderReset(); }, 3500);
+    }
   });
 
   renderAll();
