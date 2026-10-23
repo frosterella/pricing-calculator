@@ -2,8 +2,26 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<script>(function(){try{if(localStorage.getItem("pae-unlock")==="3ed5f3eafcb7d0b77f2e77cde8ce803a6c0737224066aeffdb4293cb9ff44af5")return}catch(e){}document.documentElement.classList.add("locked")})();</script>
+
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<style>:root{color-scheme:light}body{margin:0;font-family:system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<style>:root{color-scheme:light}body{margin:0;font-family:system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}
+/* ---- course password screen ---- */
+html.locked .wrap { display: none; }
+.gate { min-height: 100vh; display: grid; place-items: center; padding-block: 32px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.gate-card { position: relative; overflow: hidden; isolation: isolate; width: 100%; max-width: 480px; background: var(--mast); color: var(--mast-ink); border-radius: 22px; padding: clamp(26px, 6vw, 40px); display: grid; gap: 14px; }
+.gate-card h1 { color: var(--mast-ink); font-size: clamp(28px, 7vw, 38px); }
+.gate-card .byline { color: var(--mustard); font-weight: 500; letter-spacing: .14em; text-transform: uppercase; font-size: 12px; padding-right: 60px; }
+.gate-card p { opacity: .9; }
+.gate-card form { display: grid; gap: 10px; margin-top: 6px; }
+.gate-card label { font-weight: 600; font-size: 14px; }
+.gate-card input { font: inherit; font-size: 17px; padding: 11px 14px; border-radius: 10px; border: 2px solid transparent; background: var(--mast-ink); color: #2A2320; }
+.gate-card input:focus { outline: none; border-color: var(--mustard); }
+.gate-card button { font: inherit; font-weight: 600; padding: 11px 18px; border-radius: 999px; border: 0; background: var(--mustard); color: #2A2320; cursor: pointer; }
+.gate-card .err { color: var(--mustard); font-size: 14px; min-height: 1.4em; }
+.gate-card .s-sun { width: 150px; height: 150px; right: -60px; top: -60px; }
+.gate-card .s-arc { width: 140px; height: 140px; right: 40px; bottom: -100px; }
+</style>
 <title>The Profitable Artist Equation™</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -289,6 +307,46 @@ footer { padding-top: 8px; }
 
 </head>
 <body>
+<div class="gate" id="gate" hidden>
+  <div class="gate-card">
+    <span class="shape s-sun" aria-hidden="true"></span>
+    <span class="shape s-arc" aria-hidden="true"></span>
+    <p class="byline">Pricing &amp; Profit Calculator · by Michelle Frost</p>
+    <h1>The Profitable Artist Equation<sup class="tm">™</sup></h1>
+    <p>This calculator is for students of the course. Enter the password from your Skool classroom.</p>
+    <form id="gate-form" autocomplete="off">
+      <label for="gate-pw">Course password</label>
+      <input id="gate-pw" type="password" autocapitalize="off" spellcheck="false" required>
+      <button type="submit">Open the calculator</button>
+      <div class="err" id="gate-err" role="alert"></div>
+    </form>
+  </div>
+</div>
+<script>
+(function () {
+  var HASH = "3ed5f3eafcb7d0b77f2e77cde8ce803a6c0737224066aeffdb4293cb9ff44af5";
+  var root = document.documentElement, gate = document.getElementById("gate");
+  if (!root.classList.contains("locked")) return;
+  gate.hidden = false;
+  document.getElementById("gate-pw").focus();
+  function sha256(text) {
+    return crypto.subtle.digest("SHA-256", new TextEncoder().encode(text)).then(function (buf) {
+      return Array.from(new Uint8Array(buf)).map(function (b) { return b.toString(16).padStart(2, "0"); }).join("");
+    });
+  }
+  document.getElementById("gate-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var err = document.getElementById("gate-err");
+    sha256(document.getElementById("gate-pw").value.trim().toLowerCase()).then(function (h) {
+      if (h !== HASH) { err.textContent = "That password doesn't match. Check the latest password in your Skool classroom."; return; }
+      try { localStorage.setItem("pae-unlock", HASH); } catch (x) {}
+      gate.hidden = true;
+      root.classList.remove("locked");
+      window.scrollTo(0, 0);
+    }).catch(function () { err.textContent = "This browser can't check the password. Try opening the link in Chrome, Safari or Edge."; });
+  });
+})();
+</script>
 <div class="wrap">
   <header class="masthead">
     <span class="shape s-sun" aria-hidden="true"></span>
