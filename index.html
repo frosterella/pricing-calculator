@@ -124,6 +124,21 @@ select.per { font: inherit; font-size: 14px; color: var(--ink); background: var(
 .made-calc .made-num { font-family: var(--display); font-size: 34px; font-weight: 600; color: var(--teal); line-height: 1.1; font-variant-numeric: tabular-nums; }
 .made-calc p { font-size: 14px; color: var(--muted); }
 .made-calc a { color: var(--accent); }
+.mix-grid { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 24px; align-items: start; }
+.mix-table td { vertical-align: middle; }
+.mix-in { width: 96px; margin-left: auto; }
+.mix-in input { text-align: right; }
+.mix-summary { display: grid; gap: 14px; }
+.mix-card { border-radius: var(--radius); padding: 16px 18px; display: grid; gap: 6px; background: var(--bg); }
+.mix-card.fits { background: var(--good-soft); }
+.mix-card.over { background: var(--bad-soft); }
+.mix-card h3 { color: var(--ink); }
+.mix-card .v { font-family: var(--display); font-size: 22px; font-weight: 600; }
+.mix-card.fits .v { color: var(--good); } .mix-card.over .v { color: var(--bad); }
+.mix-card.fits .meter { color: var(--good); } .mix-card.over .meter { color: var(--bad); }
+.mix-card .meter-track { background: var(--surface); }
+.mix-card p { font-size: 14px; }
+@media (max-width: 960px) { .mix-grid { grid-template-columns: 1fr; } }
 .goal-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
 .gcard { background: var(--bg); border-radius: var(--radius); padding: 18px 20px; display: grid; gap: 10px; align-content: start; border-top: 5px solid var(--line); }
 .gcard.fits { border-top-color: var(--good); }
@@ -397,6 +412,7 @@ footer { padding-top: 8px; }
           <li>Add your pieces with their price, direct costs and time. Estimates are fine. The calculator works out how many you can make in a month from your studio hours. The two examples show how it works.</li>
           <li>See what each piece contributes in a month.</li>
           <li>In Goal check, see which pieces reach the income you'd love, and the price each one needs.</li>
+          <li>Optional: plan a monthly mix of pieces and see whether it fits your studio hours and reaches your goal.</li>
         </ol>
       </div>
       <div>
@@ -510,7 +526,15 @@ footer { padding-top: 8px; }
   <section class="panel" aria-labelledby="goal-h">
     <div class="section-head"><span class="step c2" aria-hidden="true">6</span><div class="sh-text"><span class="eyebrow">Step 6</span><h2 id="goal-h">Goal check</h2><p id="need"></p></div></div>
     <div class="goal-cards" id="goal-cards"></div>
-    <p class="note">Each piece is its own calculation, as if you made and sold only that piece all month. Use it to see which pieces reach the income you'd love, and what price the others need. The Profit Price assumes you sell what you make, so test a new price on your next few sales before you change everything.</p>
+    <p class="note">Each piece is its own calculation, as if you made and sold only that piece all month. Use it to see which pieces reach the income you'd love, and what price the others need. Want to see a mix of pieces together? Use Step 7. The Profit Price assumes you sell what you make, so test a new price on your next few sales before you change everything.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="mix-h">
+    <div class="section-head"><span class="step c3" aria-hidden="true">7</span><div class="sh-text"><span class="eyebrow">Step 7 · Optional</span><h2 id="mix-h">Your monthly mix</h2><p>Most makers sell a mix, like one or two big pieces plus smaller things. Plan how many of each you'll make in a month and see the whole month together.</p></div></div>
+    <div class="mix-grid">
+      <div class="table-wrap"><table id="mix-table" class="mix-table"></table></div>
+      <div class="mix-summary" id="mix-summary" aria-live="polite"></div>
+    </div>
   </section>
 
   <section class="next-step" aria-labelledby="next-h">
@@ -564,14 +588,14 @@ footer { padding-top: 8px; }
     ],
     selected: 0,
     pieces: [
-      { id: uid(), name: "Suncatcher (example)", price: 75, sold: 8, materials: 18, components: 2, firing: 2, packaging: 3, shipping: 0, other: 0, waste: 0, feePct: 6, fixedFee: 0.5, make: 1.5, finish: 0.5 },
-      { id: uid(), name: "Ornament (example)", price: 25, sold: 20, materials: 4, components: 0.5, firing: 0.5, packaging: 1, shipping: 0, other: 0, waste: 0, feePct: 6, fixedFee: 0.5, make: 0.2, finish: 0.1 }
+      { id: uid(), name: "Suncatcher (example)", price: 75, sold: 8, mix: 8, materials: 18, components: 2, firing: 2, packaging: 3, shipping: 0, other: 0, waste: 0, feePct: 6, fixedFee: 0.5, make: 1.5, finish: 0.5 },
+      { id: uid(), name: "Ornament (example)", price: 25, sold: 20, mix: 20, materials: 4, components: 0.5, firing: 0.5, packaging: 1, shipping: 0, other: 0, waste: 0, feePct: 6, fixedFee: 0.5, make: 0.2, finish: 0.1 }
     ]
   });
 
   function uid() { return Math.random().toString(36).slice(2, 9); }
   function blankPiece(n) {
-    return { id: uid(), name: "Piece " + n, price: "", sold: "", materials: "", components: "", firing: "", packaging: "", shipping: "", other: "", waste: "", feePct: "", fixedFee: "", make: "", finish: "" };
+    return { id: uid(), name: "Piece " + n, price: "", sold: "", mix: "", materials: "", components: "", firing: "", packaging: "", shipping: "", other: "", waste: "", feePct: "", fixedFee: "", make: "", finish: "" };
   }
 
   function load() {
@@ -644,7 +668,21 @@ footer { padding-top: 8px; }
       const priceToGoal = perMonth && fee < 1 ? (need / perMonth + costNoPct) / (1 - fee) : null;
       return { p, price, fee, direct, costNoPct, left, leftPct: price ? left / price : 0, hours, perMonth, perHr, share, realHr, verdict, pp, ppValid, diff: pp - price, leftAtPP, towardNow, towardPP, priceToGoal };
     });
-    return { s, rows, live: rows.filter(r => !r.empty), need };
+    const live = rows.filter(r => !r.empty);
+    // The mix adds up whatever quantities were planned in Step 7; overhead counts once.
+    const q = r => Math.max(0, n(r.p.mix));
+    const sum = f => live.reduce((a, r) => a + f(r), 0);
+    const mix = {
+      pieces: sum(q),
+      hours: sum(r => q(r) * r.hours),
+      sales: sum(r => q(r) * r.price),
+      left: sum(r => q(r) * r.left),
+      // Pieces already priced above their Profit Price keep their current price.
+      leftPP: sum(r => q(r) * (r.ppValid && r.pp > r.price ? r.leftAtPP : r.left))
+    };
+    mix.toward = mix.left - overhead;
+    mix.towardPP = mix.leftPP - overhead;
+    return { s, rows, live, need, mix };
   }
 
   const VERDICT = { keeper: "Keeper", raise: "Raise the price", rethink: "Rethink this piece" };
@@ -831,15 +869,85 @@ footer { padding-top: 8px; }
 
   function renderOutputs() {
     const c = compute();
-    renderTotals(c); renderShelf(c); renderResults(c); renderMadeCalc(c); renderCompare(c); renderGoal(c);
+    renderTotals(c); renderShelf(c); renderResults(c); renderMadeCalc(c); renderCompare(c); renderGoal(c); renderMixOutputs(c);
   }
-  function renderAll() { renderSettings(); renderList("biz"); renderList("personal"); renderForm(); renderOutputs(); renderReset(); }
+  function renderMix() {
+    $("mix-table").innerHTML = `
+      <thead><tr><th>Piece</th><th>Hours each</th><th>How many this month</th><th>Hours</th><th>Left after costs</th></tr></thead>
+      <tbody>${state.pieces.map((p, i) => `
+        <tr>
+          <td><strong id="mix-name-${p.id}"></strong></td>
+          <td id="mix-each-${p.id}"></td>
+          <td><div class="inbox mix-in"><input id="mix-${p.id}" inputmode="decimal" data-mix="${i}" aria-label="How many this month" value="${esc(p.mix ?? "")}"></div></td>
+          <td id="mix-hrs-${p.id}"></td>
+          <td id="mix-left-${p.id}"></td>
+        </tr>`).join("")}</tbody>
+      <tfoot><tr><td>Your month</td><td></td><td id="mix-tot-pieces"></td><td id="mix-tot-hrs"></td><td id="mix-tot-left"></td></tr></tfoot>`;
+  }
+
+  function renderMixOutputs(c) {
+    const s = c.s, m = c.mix;
+    c.rows.forEach(r => {
+      const id = r.p.id, name = $("mix-name-" + id);
+      if (!name) return;
+      name.textContent = r.p.name || "Untitled piece";
+      const qty = Math.max(0, n(r.p.mix));
+      if (r.empty) {
+        $("mix-each-" + id).textContent = "—"; $("mix-hrs-" + id).textContent = "—";
+        $("mix-left-" + id).innerHTML = '<span style="color:var(--muted)">Add a price in Step 4</span>';
+        return;
+      }
+      $("mix-each-" + id).textContent = hrs(r.hours);
+      $("mix-hrs-" + id).textContent = hrs(qty * r.hours);
+      $("mix-left-" + id).textContent = money(qty * r.left, 0);
+      $("mix-left-" + id).className = r.left < 0 ? "neg" : "";
+    });
+    $("mix-tot-pieces").textContent = m.pieces.toLocaleString() + " pieces";
+    $("mix-tot-hrs").textContent = hrs(m.hours);
+    $("mix-tot-left").textContent = money(m.left, 0);
+
+    if (!m.pieces) {
+      $("mix-summary").innerHTML = `<div class="mix-card none"><h3>Plan your month</h3><p>Type how many of each piece you'll make this month to see your mix.</p></div>`;
+      return;
+    }
+    const fits = m.hours <= s.hoursMonth + 1e-9;
+    const top = Math.max(m.hours, s.hoursMonth, 1) * 1.1;
+    const hourLine = s.hoursMonth > 0
+      ? (fits ? `Uses ${hrs(m.hours)} of your ${hrs(s.hoursMonth)} studio hours this month. ${hrs(s.hoursMonth - m.hours)} to spare.`
+              : `Needs ${hrs(m.hours)}, but you have ${hrs(s.hoursMonth)} of studio time this month. That's ${hrs(m.hours - s.hoursMonth)} too many. Make fewer pieces, choose faster ones, or add studio hours in Step 3.`)
+      : `Add your studio hours in Step 3 to check this mix against your time.`;
+    const reaches = s.goal > 0 && m.toward >= s.goal - 0.005;
+    const goalLine = s.goal <= 0 ? `Fill in Step 1 to compare this with the income you'd love.`
+      : reaches ? `That reaches the ${money(s.goal, 0)} income you'd love, with ${money(m.toward - s.goal, 0)} to spare.`
+      : `That's ${money(s.goal - m.toward, 0)} short of the ${money(s.goal, 0)} income you'd love.`;
+    $("mix-summary").innerHTML = `
+      <div class="mix-card ${s.hoursMonth > 0 ? (fits ? "fits" : "over") : "none"}">
+        <h3>Your time</h3>
+        <div class="v">${s.hoursMonth > 0 ? (fits ? "Fits your studio hours" : "Over your studio hours") : "Studio hours not set"}</div>
+        ${s.hoursMonth > 0 ? `<div class="meter" aria-hidden="true"><div class="meter-track"><div class="meter-fill" style="width:${Math.min(100, m.hours / top * 100)}%"></div><div class="meter-tick" style="left:${s.hoursMonth / top * 100}%"></div></div><div class="meter-labels"><span style="left:${s.hoursMonth / top * 100}%">your ${hrs(s.hoursMonth)}</span></div></div>` : ""}
+        <p>${hourLine}</p>
+      </div>
+      <div class="mix-card ${s.goal > 0 ? (reaches ? "fits" : "over") : "none"}">
+        <h3>Your money</h3>
+        <dl class="rows">
+          <div><dt>Sales this month</dt><dd>${money(m.sales, 0)}</dd></div>
+          <div><dt>Left after each piece's costs</dt><dd>${money(m.left, 0)}</dd></div>
+          <div><dt>Minus business expenses (Step 2)</dt><dd>${money(-s.overhead, 0)}</dd></div>
+          <div class="strong"><dt>Toward your income</dt><dd class="${m.toward < 0 ? "neg" : ""}">${money(m.toward, 0)}</dd></div>
+          <div><dt>If you raised prices to your Profit Prices</dt><dd>${money(m.towardPP, 0)}</dd></div>
+        </dl>
+        <p>${goalLine}</p>
+      </div>`;
+  }
+
+  function renderAll() { renderSettings(); renderList("biz"); renderList("personal"); renderForm(); renderMix(); renderOutputs(); renderReset(); }
 
   document.addEventListener("input", e => {
     const t = e.target;
     if (t.dataset.setting) { state.settings[t.dataset.setting] = t.value; }
     else if (t.dataset.field) { current()[t.dataset.field] = t.value; }
     else if (t.dataset.list) { state[t.dataset.list][+t.dataset.i][t.dataset.k] = t.value; }
+    else if (t.dataset.mix) { state.pieces[+t.dataset.mix].mix = t.value; }
     else return;
     save(); renderOutputs();
   });
@@ -858,7 +966,7 @@ footer { padding-top: 8px; }
     if (act === "add") {
       state.pieces.push(blankPiece(state.pieces.length + 1));
       state.selected = state.pieces.length - 1; save();
-      renderForm(); renderOutputs();
+      renderForm(); renderMix(); renderOutputs();
       $("f-name").focus(); $("f-name").select();
     } else if (act === "add-exp") {
       const key = btn.dataset.list, item = exp("", "");
@@ -877,7 +985,7 @@ footer { padding-top: 8px; }
     else if (act === "del-yes") {
       state.pieces.splice(state.selected, 1);
       state.selected = Math.max(0, state.selected - 1); save();
-      renderForm(); renderOutputs();
+      renderForm(); renderMix(); renderOutputs();
     }
     else if (act === "reset") { confirmReset = true; renderReset(); }
     else if (act === "reset-no") { confirmReset = false; renderReset(); }
