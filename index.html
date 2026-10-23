@@ -1,0 +1,893 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{color-scheme:light}body{margin:0;font-family:system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>The Profitable Artist Equation™</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: a mid-century studio ledger — a teal masthead with atomic-age shapes, then numbered steps in one flowing column. Each step badge takes the next colour in the palette. Inputs stay pale mustard, like the spreadsheet's "type here" cells. */
+:root {
+  --bg: #F4EDE1;
+  --surface: #FFFBF4;
+  --ink: #2A2320;
+  --muted: #6B5F57;
+  --line: #E4D8C6;
+  --teal: #1F6F6B;
+  --mustard: #E2A72E;
+  --orange: #C4572C;
+  --olive: #74863A;
+  --accent: #1F6F6B;
+  --accent-soft: #E0EEEB;
+  --on-accent: #FFFBF4;
+  --mast: #4A3227;
+  --mast-ink: #FBF2E2;
+  --input: #FCF1D4;
+  --input-line: #E9D39A;
+  --good: #4D7A2E;
+  --good-soft: #E8EFD9;
+  --warn: #A66F07;
+  --warn-soft: #FBEBCB;
+  --bad: #B3462A;
+  --bad-soft: #F8E1D7;
+  --display: "Jost", "Futura", "Century Gothic", "Avenir Next", system-ui, sans-serif;
+  --body: "Jost", "Futura", "Century Gothic", "Avenir Next", system-ui, sans-serif;
+  --radius: 14px;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #1C1815; --surface: #26201C; --ink: #F1E7D7; --muted: #B2A595; --line: #3A322B;
+  --teal: #5DB1A9; --mustard: #E8B54C; --orange: #E27B52; --olive: #A3B65E;
+  --accent: #5DB1A9; --accent-soft: #1E3533; --on-accent: #1C1815;
+  --mast: #3B281F; --mast-ink: #FBF2E2;
+  --input: #352C1C; --input-line: #5C4C2A;
+  --good: #9CC26A; --good-soft: #263021; --warn: #E8B54C; --warn-soft: #382C14; --bad: #E8835F; --bad-soft: #3D231A;
+  color-scheme: dark;
+} }
+:root[data-theme="dark"] {
+  --bg: #1C1815; --surface: #26201C; --ink: #F1E7D7; --muted: #B2A595; --line: #3A322B;
+  --teal: #5DB1A9; --mustard: #E8B54C; --orange: #E27B52; --olive: #A3B65E;
+  --accent: #5DB1A9; --accent-soft: #1E3533; --on-accent: #1C1815;
+  --mast: #3B281F; --mast-ink: #FBF2E2;
+  --input: #352C1C; --input-line: #5C4C2A;
+  --good: #9CC26A; --good-soft: #263021; --warn: #E8B54C; --warn-soft: #382C14; --bad: #E8835F; --bad-soft: #3D231A;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.55; }
+.wrap { max-width: 1120px; margin: 0 auto; padding-block: 24px 56px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 28px; }
+h1, h2, h3 { font-family: var(--display); margin: 0; text-wrap: balance; line-height: 1.1; }
+h1 { font-size: clamp(32px, 5.4vw, 52px); font-weight: 600; letter-spacing: -0.01em; }
+h2 { font-size: clamp(22px, 2.6vw, 27px); font-weight: 600; }
+h3 { font-size: 13px; font-family: var(--body); font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); }
+p { margin: 0; }
+.num { font-variant-numeric: tabular-nums; }
+button { font: inherit; cursor: pointer; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 16px; }
+header .byline { color: var(--muted); margin-top: 6px; }
+header .lede { max-width: 58ch; margin-top: 10px; font-size: 16px; }
+.hdr-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+.btn { border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 8px; padding: 8px 14px; }
+.btn:hover { border-color: var(--accent); }
+.btn.danger { color: var(--bad); }
+.btn.small { padding: 5px 10px; font-size: 13px; }
+.linkish { background: none; border: 0; color: var(--accent); padding: 0; text-decoration: underline; text-underline-offset: 3px; }
+
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; min-width: 0; }
+.section-head { display: flex; justify-content: space-between; align-items: baseline; gap: 6px 12px; flex-wrap: wrap; margin-bottom: 14px; }
+.section-head p { color: var(--muted); }
+.step { display: block; font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin-bottom: 4px; font-family: var(--body); }
+
+/* inputs */
+.field { display: grid; gap: 4px; align-content: start; }
+.field label { font-weight: 700; font-size: 14px; }
+.field .hint { color: var(--muted); font-size: 13px; }
+.inbox { display: flex; align-items: center; background: var(--input); border: 1px solid var(--input-line); border-radius: 7px; overflow: hidden; min-width: 0; }
+.inbox:focus-within { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft); }
+.inbox span { padding: 0 8px; color: var(--muted); font-size: 14px; white-space: nowrap; }
+.inbox input { flex: 1; min-width: 0; border: 0; background: transparent; color: var(--ink); font: inherit; font-variant-numeric: tabular-nums; padding: 8px 10px; outline: none; }
+.inbox span + input { padding-left: 0; }
+select.per { font: inherit; font-size: 14px; color: var(--ink); background: var(--input); border: 1px solid var(--input-line); border-radius: 7px; padding: 8px 6px; min-width: 0; }
+
+.settings { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+
+/* expense lists */
+.split { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 24px; align-items: start; }
+.split .cover { margin-top: 0; }
+.bridge { padding: 18px; background: var(--bg); border-radius: var(--radius); display: grid; gap: 4px; }
+.bridge .ln { display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; font-size: 14px; font-variant-numeric: tabular-nums; }
+.bridge .ln strong { white-space: nowrap; }
+.bridge .ln.sum { border-top: 2px solid var(--ink); margin-top: 4px; padding-top: 10px; font-weight: 700; }
+.bridge .ln.sum strong { font-family: var(--display); font-size: 22px; }
+.bridge .gauge { margin-top: 10px; }
+.bridge .gauge .meter-track { background: var(--surface); }
+.bridge p { font-size: 13px; color: var(--muted); margin-top: 6px; }
+tfoot td { font-weight: 700; border-top: 2px solid var(--ink); border-bottom: 0; }
+.exp-list { display: grid; gap: 8px; }
+.exp-row { display: grid; grid-template-columns: minmax(0, 1fr) 120px 96px 32px; gap: 8px; align-items: center; }
+.exp-row .x { border: 0; background: none; color: var(--muted); font-size: 20px; line-height: 1; width: 32px; height: 32px; border-radius: 6px; }
+.exp-row .x:hover { color: var(--bad); background: var(--bad-soft); }
+.exp-add { margin-top: 10px; border: 1px dashed var(--accent); color: var(--accent); background: none; border-radius: 8px; padding: 8px 14px; font-weight: 700; }
+.exp-add:hover { background: var(--accent-soft); }
+.total-line { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-top: 14px; padding-top: 12px; border-top: 2px solid var(--ink); }
+.total-line span { font-weight: 700; }
+.total-line strong { font-family: var(--display); font-size: 24px; font-variant-numeric: tabular-nums; }
+.cover { display: grid; gap: 14px; margin-top: 18px; padding: 16px; background: var(--bg); border-radius: var(--radius); }
+.cover-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; }
+.quick { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+.quick button { border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 3px 11px; font-size: 13px; }
+.quick button[aria-pressed="true"] { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+.goal-out { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.goal-out .big { font-family: var(--display); font-size: 30px; font-weight: 800; color: var(--accent); font-variant-numeric: tabular-nums; }
+.goal-out .math { font-size: 13px; color: var(--muted); }
+
+/* pieces workbench */
+.bench { display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 20px; align-items: start; }
+.shelf { display: grid; gap: 8px; }
+.chip { display: grid; gap: 4px; text-align: left; width: 100%; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 8px; padding: 10px 12px; }
+.chip:hover { border-color: var(--accent); }
+.chip[aria-current="true"] { border-color: var(--accent); box-shadow: inset 3px 0 0 var(--accent); background: var(--accent-soft); }
+.chip .nm { font-weight: 700; overflow-wrap: anywhere; }
+.chip .meta { display: flex; justify-content: space-between; gap: 6px; align-items: center; font-size: 13px; color: var(--muted); }
+.add { border-style: dashed; color: var(--accent); text-align: center; }
+
+.pill { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+.pill.keeper, .pill.fits { background: var(--good-soft); color: var(--good); }
+.pill.raise { background: var(--warn-soft); color: var(--warn); }
+.pill.rethink, .pill.over { background: var(--bad-soft); color: var(--bad); }
+.pill.none { background: var(--bg); color: var(--muted); }
+
+.editor { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+.form { display: grid; gap: 22px; }
+.group { display: grid; gap: 12px; }
+.group-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.group-grid .wide { grid-column: 1 / -1; }
+.form-foot { display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; align-items: center; }
+.confirm { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: 14px; }
+
+.results { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 12px); display: grid; gap: 16px; }
+.verdict-card { border-radius: var(--radius); padding: 18px; display: grid; gap: 6px; }
+.verdict-card.keeper { background: var(--good-soft); }
+.verdict-card.raise { background: var(--warn-soft); }
+.verdict-card.rethink { background: var(--bad-soft); }
+.verdict-card.none { background: var(--bg); }
+.verdict-card .v { font-family: var(--display); font-size: 28px; font-weight: 800; }
+.keeper .v { color: var(--good); } .raise .v { color: var(--warn); } .rethink .v { color: var(--bad); }
+.verdict-card p { font-size: 14px; }
+
+.meter { margin-top: 8px; }
+.meter-track { position: relative; height: 10px; border-radius: 5px; background: var(--surface); }
+.meter-fill { position: absolute; inset: 0 auto 0 0; border-radius: 5px; background: currentColor; transition: width .25s ease; }
+.meter-tick { position: absolute; top: -4px; bottom: -4px; width: 2px; background: var(--ink); opacity: .55; }
+.meter-labels { position: relative; height: 18px; font-size: 12px; color: var(--muted); margin-top: 4px; }
+.meter-labels span { position: absolute; transform: translateX(-50%); white-space: nowrap; }
+.keeper .meter, .fits .meter { color: var(--good); } .raise .meter { color: var(--warn); } .rethink .meter, .over .meter { color: var(--bad); } .none .meter { color: var(--muted); }
+
+.pp { border: 2px solid var(--accent); border-radius: var(--radius); padding: 16px 18px; display: grid; gap: 4px; }
+.pp .label { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--accent); }
+.pp .big { font-family: var(--display); font-size: 40px; font-weight: 800; line-height: 1; }
+.pp .diff { color: var(--muted); font-size: 14px; }
+
+.rows { display: grid; margin: 0; }
+.rows > div { display: flex; justify-content: space-between; gap: 12px; padding: 7px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+.rows > div:last-child { border-bottom: 0; }
+.rows dt { color: var(--muted); }
+.rows dd { margin: 0; font-weight: 700; font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+.rows .strong dt { color: var(--ink); font-weight: 700; }
+
+/* tables */
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; font-variant-numeric: tabular-nums; }
+th, td { padding: 9px 10px; text-align: right; border-bottom: 1px solid var(--line); white-space: nowrap; }
+th:first-child, td:first-child { text-align: left; white-space: normal; min-width: 130px; }
+thead th { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 700; white-space: normal; vertical-align: bottom; }
+thead tr.band th { border-bottom: 0; padding-bottom: 0; color: var(--accent); }
+tbody tr.clickable { cursor: pointer; }
+tbody tr.clickable:hover td { background: var(--accent-soft); }
+tr.mix td { background: var(--bg); }
+td small { display: block; color: var(--muted); font-size: 12px; font-weight: 400; }
+.neg { color: var(--bad); }
+.pos { color: var(--good); }
+
+.lower { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; }
+.headline-num { font-family: var(--display); font-size: 34px; font-weight: 800; line-height: 1.05; }
+.month-top { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-bottom: 14px; }
+.month-top .cap { font-size: 13px; color: var(--muted); }
+.month-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px 28px; }
+.note { font-size: 13px; color: var(--muted); margin-top: 12px; }
+.note a { color: var(--accent); }
+.step-note { margin-top: 18px; padding: 10px 14px; background: var(--accent-soft); color: var(--ink); border-radius: 8px; font-size: 14px; }
+
+.capacity { border-radius: var(--radius); padding: 18px; display: grid; gap: 6px; margin-bottom: 16px; }
+.capacity.fits { background: var(--good-soft); }
+.capacity.over { background: var(--bad-soft); }
+.capacity.none { background: var(--bg); }
+.capacity .v { font-family: var(--display); font-size: 22px; font-weight: 800; }
+.capacity.fits .v { color: var(--good); } .capacity.over .v { color: var(--bad); }
+.capacity p { font-size: 14px; max-width: 75ch; }
+
+details.guide { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 0 20px; }
+details.guide summary { cursor: pointer; padding: 16px 0; font-family: var(--display); font-weight: 700; font-size: 18px; }
+.guide-body { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; padding-bottom: 20px; }
+.guide-body ol, .guide-body ul { margin: 8px 0 0; padding-left: 20px; display: grid; gap: 6px; font-size: 14px; }
+.guide-body p { font-size: 14px; margin-top: 8px; }
+footer { color: var(--muted); font-size: 13px; text-align: center; }
+
+/* ---- mid-century treatment ---- */
+.masthead { position: relative; overflow: hidden; isolation: isolate; background: var(--mast); color: var(--mast-ink); border-radius: 22px; padding: clamp(24px, 4vw, 44px); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 20px; }
+.masthead .mast-text { max-width: 640px; position: relative; }
+.masthead .byline { color: var(--mustard); margin: 0 0 10px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; font-size: 13px; }
+.masthead h1 { color: var(--mast-ink); }
+.masthead .lede { color: var(--mast-ink); opacity: .88; max-width: 54ch; margin-top: 14px; font-size: 17px; }
+.tm { font-size: .32em; font-weight: 500; vertical-align: super; margin-left: 3px; letter-spacing: 0; position: relative; top: -.6em; }
+.shape { position: absolute; z-index: -1; border-radius: 50%; pointer-events: none; }
+.s-sun { width: 260px; height: 260px; right: -60px; top: -90px; background: var(--mustard); }
+.s-arc { width: 200px; height: 200px; right: 150px; bottom: -130px; background: var(--teal); }
+.s-dot { width: 54px; height: 54px; right: 120px; top: 34px; background: transparent; border: 7px solid var(--orange); }
+.masthead .hdr-actions { position: relative; }
+.masthead .btn { background: var(--mast-ink); color: var(--mast); border-color: var(--mast-ink); font-weight: 600; }
+.masthead .confirm { color: var(--mast-ink); background: var(--mast); padding: 6px 10px; border-radius: 10px; }
+
+.panel { border: 0; box-shadow: 0 1px 0 var(--line), 0 0 0 1px var(--line); padding: clamp(18px, 3vw, 30px); }
+.section-head { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: start; gap: 16px; margin-bottom: 22px; padding-bottom: 18px; border-bottom: 1px solid var(--line); }
+.section-head .sh-text { display: grid; gap: 4px; }
+.section-head p { color: var(--muted); max-width: 70ch; }
+.eyebrow { font-size: 12px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+.step { display: grid; place-items: center; width: 52px; height: 52px; margin: 0; border-radius: 50%; font-family: var(--display); font-size: 24px; font-weight: 600; letter-spacing: 0; text-transform: none; color: var(--on-accent); }
+.step.c1 { background: var(--teal); }
+.step.c2 { background: var(--mustard); color: #2A2320; }
+.step.c3 { background: var(--orange); }
+.step.c0 { background: var(--olive); }
+
+.field label { font-weight: 600; }
+.inbox, select.per { border-radius: 9px; }
+.exp-add { border-radius: 999px; font-weight: 600; }
+.btn { border-radius: 999px; }
+.chip { border-radius: 12px; }
+.chip[aria-current="true"] { box-shadow: none; border-color: var(--teal); border-width: 2px; padding: 9px 11px; }
+.total-line { border-top-color: var(--ink); }
+.total-line strong, .goal-out .big, .pp .big, .headline-num, .verdict-card .v, .capacity .v, .bridge .ln.sum strong { font-weight: 600; letter-spacing: -0.01em; }
+.goal-out .big { color: var(--teal); }
+.pp { border-color: var(--teal); }
+.pp .label { color: var(--teal); }
+.cover, .bridge { background: var(--bg); }
+thead th { color: var(--muted); font-weight: 600; letter-spacing: .1em; }
+thead tr.band th { color: var(--teal); }
+.pill { font-weight: 600; }
+.step-note { background: var(--warn-soft); border-left: 0; }
+details.guide summary { font-weight: 600; }
+footer { padding-top: 8px; }
+
+@media (max-width: 960px) {
+  .editor, .split { grid-template-columns: 1fr; }
+  .results { position: static; }
+  .guide-body { grid-template-columns: 1fr; }
+}
+@media (max-width: 720px) {
+  .s-sun { width: 120px; height: 120px; right: -62px; top: -62px; }
+  .masthead .byline { padding-right: 52px; }
+  .s-arc { right: -40px; bottom: -150px; }
+  .s-dot { display: none; }
+  .step { width: 42px; height: 42px; font-size: 20px; }
+  .section-head { gap: 12px; }
+  .bench { grid-template-columns: 1fr; }
+  .shelf { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+  .settings, .group-grid, .cover-row, .month-grid { grid-template-columns: 1fr; }
+  .month-top { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 480px) {
+  .exp-row { grid-template-columns: minmax(0, 1fr) 118px 32px; }
+  .exp-row .nm { grid-column: 1 / -1; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header class="masthead">
+    <span class="shape s-sun" aria-hidden="true"></span>
+    <span class="shape s-arc" aria-hidden="true"></span>
+    <span class="shape s-dot" aria-hidden="true"></span>
+    <div class="mast-text">
+      <p class="byline">Pricing &amp; Profit Calculator · by Michelle Frost</p>
+      <h1>The Profitable Artist Equation<sup class="tm">™</sup></h1>
+      <p class="lede">Find out what each of your pieces really earns you, what you should be charging, and whether your goal fits the hours you have. Type in the yellow boxes. Everything else calculates for you.</p>
+    </div>
+    <div class="hdr-actions" id="reset-area"></div>
+  </header>
+
+  <details class="guide" id="guide">
+    <summary>How it works</summary>
+    <div class="guide-body">
+      <div>
+        <h3>How to use it (about 30 minutes)</h3>
+        <ol>
+          <li>Start with why: list your personal monthly costs and choose how much of them your art should cover. That's your income goal.</li>
+          <li>Set your hourly rate, profit margin and the studio hours you really have each week.</li>
+          <li>Add your pieces with their price, direct costs and time. Estimates are fine. The two examples show how it works.</li>
+          <li>See what each piece contributes every month.</li>
+          <li>List your business expenses. Use “per year” for things like insurance. They come out of what your pieces bring in, and what's left goes toward your income goal.</li>
+          <li>Check your month and whether your goal fits your hours.</li>
+        </ol>
+      </div>
+      <div>
+        <h3>What the verdicts mean</h3>
+        <ul>
+          <li><span class="pill keeper">Keeper</span> After costs and overhead, this piece earns at least the hourly rate you want.</li>
+          <li><span class="pill raise">Raise the price</span> It earns 60–99% of your rate. A price increase or a faster process will probably fix it.</li>
+          <li><span class="pill rethink">Rethink this piece</span> It earns less than 60% of your rate. Raise the price a lot, make it faster, or decide it's a "love it" piece, not a "money" piece.</li>
+          <li><span class="pill over">Over your hours</span> Reaching your goal this way needs more studio time than you have each week.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>A few terms</h3>
+        <p><strong>Direct costs:</strong> costs that come with each piece you sell (materials, packaging, fees, firing).</p>
+        <p><strong>Overhead:</strong> costs you pay every month even if you sell nothing. Split across every piece you sell.</p>
+        <p><strong>What's left:</strong> price minus direct costs. This pays your overhead, then pays you.</p>
+        <p><strong>Profit Price:</strong> the price that covers your costs, pays your hourly rate, covers your share of overhead, and adds your profit margin.</p>
+        <p><strong>Price to fit your hours:</strong> the lowest price that reaches your income goal if you fill your studio hours with that piece.</p>
+      </div>
+    </div>
+  </details>
+
+  <section class="panel" aria-labelledby="personal-h">
+    <div class="section-head"><span class="step c1" aria-hidden="true">1</span><div class="sh-text"><span class="eyebrow">Step 1</span><h2 id="personal-h">The income you'd love</h2><p>Start with why. List your personal monthly costs, then choose how much of them your art should pay for.</p></div></div>
+    <div class="split">
+      <div>
+        <div class="exp-list" id="list-personal"></div>
+        <button class="exp-add" data-act="add-exp" data-list="personal">+ Add an expense</button>
+        <div class="total-line"><span>Personal expenses per month</span><strong id="personal-total"></strong></div>
+      </div>
+      <div class="cover">
+        <div class="field">
+          <label for="s-cover">How much should your art cover?</label>
+          <div class="inbox"><input id="s-cover" inputmode="decimal" data-setting="cover"><span>%</span></div>
+          <div class="quick" id="cover-quick">
+            <button data-act="cover" data-v="25">25%</button><button data-act="cover" data-v="50">50%</button><button data-act="cover" data-v="75">75%</button><button data-act="cover" data-v="100">100%</button>
+          </div>
+        </div>
+        <div class="field">
+          <label for="s-tax">Set aside for income tax</label>
+          <div class="inbox"><input id="s-tax" inputmode="decimal" data-setting="tax"><span>%</span></div>
+          <div class="hint">Optional. Bills are paid after tax, so this grosses up your goal. Leave at 0 to match the spreadsheet.</div>
+        </div>
+        <div class="goal-out"><div><div class="math" id="goal-math"></div><div class="big" id="goal-total"></div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="settings-h">
+    <div class="section-head"><span class="step c2" aria-hidden="true">2</span><div class="sh-text"><span class="eyebrow">Step 2</span><h2 id="settings-h">Your rate and your time</h2><p>These apply to every piece.</p></div></div>
+    <div class="settings">
+      <div class="field">
+        <label for="s-rate">Hourly rate you want</label>
+        <div class="inbox"><span>$</span><input id="s-rate" inputmode="decimal" data-setting="rate"><span>/hour</span></div>
+        <div class="hint">What you'd want to be paid to make this work.</div>
+      </div>
+      <div class="field">
+        <label for="s-margin">Profit margin on top</label>
+        <div class="inbox"><input id="s-margin" inputmode="decimal" data-setting="margin"><span>%</span></div>
+        <div class="hint">10–20% is common. This builds savings and growth.</div>
+      </div>
+      <div class="field">
+        <label for="s-hours">Studio hours you can work each week</label>
+        <div class="inbox"><input id="s-hours" inputmode="decimal" data-setting="hours"><span>hours/week</span></div>
+        <div class="hint">Making plus finishing, photos, listing and packing. Be honest about the rest of your life.</div>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="pieces-h" class="panel">
+    <div class="section-head"><span class="step c3" aria-hidden="true">3</span><div class="sh-text"><span class="eyebrow">Step 3</span><h2 id="pieces-h">Your pieces</h2><p>Start with your bestseller, a piece you love, and one you suspect isn't pulling its weight.</p></div></div>
+    <div class="bench">
+      <nav class="shelf" id="shelf" aria-label="Pieces"></nav>
+      <div class="editor">
+        <div class="form" id="form"></div>
+        <div class="results" id="results" aria-live="polite"></div>
+      </div>
+    </div>
+    <p class="note step-note">Have business overhead like a website, software, insurance or ads? Add it in <a href="#biz-h">Step 5</a>. Each piece's verdict and Profit Price include its share, so these results will update.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="compare-h">
+    <div class="section-head"><span class="step c0" aria-hidden="true">4</span><div class="sh-text"><span class="eyebrow">Step 4</span><h2 id="compare-h">What each piece contributes</h2><p>Tap a row to edit that piece.</p></div></div>
+    <div class="table-wrap"><table id="compare"></table></div>
+  </section>
+
+  <section class="panel" aria-labelledby="biz-h">
+    <div class="section-head"><span class="step c1" aria-hidden="true">5</span><div class="sh-text"><span class="eyebrow">Step 5</span><h2 id="biz-h">Your business expenses</h2><p>Costs you pay even if you sell nothing. Business share only, no materials. These come out before you get paid.</p></div></div>
+    <div class="split">
+      <div>
+        <div class="exp-list" id="list-biz"></div>
+        <button class="exp-add" data-act="add-exp" data-list="biz">+ Add an expense</button>
+        <div class="total-line"><span>Monthly business overhead</span><strong id="biz-total"></strong></div>
+      </div>
+      <div class="bridge" id="bridge"></div>
+    </div>
+  </section>
+
+  <div class="lower">
+    <section class="panel" aria-labelledby="month-h">
+      <div class="section-head"><span class="step c2" aria-hidden="true">6</span><div class="sh-text"><span class="eyebrow">Step 6</span><h2 id="month-h">Your month at a glance</h2><p>Selling what you sell now.</p></div></div>
+      <div id="month"></div>
+      <p class="note">The Profit Price assumes you'd sell the same number of pieces. Test a new price on your next few sales before you change everything.</p>
+    </section>
+
+    <section class="panel" aria-labelledby="goal-h">
+      <div class="section-head"><span class="step c3" aria-hidden="true">7</span><div class="sh-text"><span class="eyebrow">Step 7</span><h2 id="goal-h">Goal check: can you make it in your hours?</h2><p id="need"></p></div></div>
+      <div id="capacity"></div>
+      <div class="table-wrap"><table id="goal"></table></div>
+      <p class="note">“Your current mix” scales up the pieces you sell now in the same proportions. Each other row asks: if you sold only this piece, what would it take? Over your hours? The answer is price, a faster process, or a different mix of pieces, not working harder. And check you can find that many buyers.</p>
+    </section>
+  </div>
+
+
+  <footer>A planning tool, not tax or accounting advice. Your numbers are saved in this browser only.</footer>
+</div>
+
+<script>
+(function () {
+  const STORE_KEY = "pae-v2b";
+  const OLD_KEY = "pae-v1";
+  const MAX_PIECES = 12;
+  const WEEKS_PER_MONTH = 52 / 12;
+
+  const FIELDS = [
+    { group: "The basics", items: [
+      { k: "name", label: "Piece name", type: "text", wide: true },
+      { k: "price", label: "Current selling price", pre: "$" },
+      { k: "sold", label: "Typical number sold per month", post: "/month" }
+    ]},
+    { group: "Direct costs per piece", items: [
+      { k: "materials", label: "Materials & supplies", pre: "$", hint: "Glass, clay, metal, paint, etc." },
+      { k: "components", label: "Components & hardware", pre: "$", hint: "Findings, hangers, bails, stands" },
+      { k: "firing", label: "Firing / kiln / energy", pre: "$" },
+      { k: "packaging", label: "Packaging & labels", pre: "$" },
+      { k: "shipping", label: "Shipping you pay", pre: "$", hint: "Only if not charged to the buyer" },
+      { k: "other", label: "Other per-piece costs", pre: "$" },
+      { k: "waste", label: "Waste & breakage allowance", post: "%", hint: "% of materials + components" },
+      { k: "feePct", label: "Selling & payment fees", post: "%", hint: "% of price" },
+      { k: "fixedFee", label: "Fixed fee per sale", pre: "$", hint: "Listing or transaction fee" }
+    ]},
+    { group: "Time per piece", items: [
+      { k: "make", label: "Making time", post: "hours" },
+      { k: "finish", label: "Finishing, photos, listing & packing", post: "hours" }
+    ]}
+  ];
+
+  const exp = (name, amount, per = "month") => ({ id: uid(), name, amount, per });
+  const EXAMPLES = () => ({
+    settings: { rate: 30, margin: 10, cover: 60, tax: 0, hours: 20 },
+    biz: [
+      exp("Website & domain", 0), exp("Software & apps", 0), exp("Insurance", 0, "year"),
+      exp("Ads & marketing", 0), exp("Studio share of utilities", 0)
+    ],
+    personal: [
+      exp("Rent or mortgage", 0), exp("Groceries", 0), exp("Utilities", 0), exp("Car & transport", 0),
+      exp("Phone & internet", 0), exp("Health insurance", 0), exp("Fun & extras", 0), exp("Savings", 0)
+    ],
+    selected: 0,
+    pieces: [
+      { id: uid(), name: "Suncatcher (example)", price: 75, sold: 8, materials: 18, components: 2, firing: 2, packaging: 3, shipping: 0, other: 0, waste: 0, feePct: 6, fixedFee: 0.5, make: 1.5, finish: 0.5 },
+      { id: uid(), name: "Ornament (example)", price: 25, sold: 20, materials: 4, components: 0.5, firing: 0.5, packaging: 1, shipping: 0, other: 0, waste: 0, feePct: 6, fixedFee: 0.5, make: 0.2, finish: 0.1 }
+    ]
+  });
+
+  function uid() { return Math.random().toString(36).slice(2, 9); }
+  function blankPiece(n) {
+    return { id: uid(), name: "Piece " + n, price: "", sold: "", materials: "", components: "", firing: "", packaging: "", shipping: "", other: "", waste: "", feePct: "", fixedFee: "", make: "", finish: "" };
+  }
+
+  function load() {
+    try {
+      const s = JSON.parse(localStorage.getItem(STORE_KEY));
+      if (s && Array.isArray(s.pieces) && s.pieces.length && Array.isArray(s.biz)) return s;
+    } catch (e) {}
+    // Carry over numbers saved by the earlier version of this calculator.
+    try {
+      const o = JSON.parse(localStorage.getItem(OLD_KEY));
+      if (o && Array.isArray(o.pieces) && o.pieces.length) {
+        const s = EXAMPLES();
+        s.pieces = o.pieces; s.selected = o.selected || 0;
+        s.settings.rate = o.settings.rate; s.settings.margin = o.settings.margin;
+        s.biz = [exp("Business overhead", o.settings.overhead)];
+        s.personal = [exp("Monthly income goal", o.settings.goal)];
+        s.settings.cover = 100;
+        return s;
+      }
+    } catch (e) {}
+    return EXAMPLES();
+  }
+  let state = load();
+  function save() { try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {} }
+
+  const n = v => { const x = parseFloat(String(v ?? "").replace(/[$,%\s]/g, "")); return isFinite(x) ? x : 0; };
+  const has = v => String(v ?? "").trim() !== "";
+  const money = (v, dp = 2) => (v < 0 ? "−$" : "$") + Math.abs(v).toLocaleString("en-US", { minimumFractionDigits: dp, maximumFractionDigits: dp });
+  const signed = v => (v > 0 ? "+" : "") + money(v);
+  const pct = v => (v * 100).toFixed(0) + "%";
+  const hrs = v => (Math.round(v * 10) / 10).toLocaleString("en-US") + " h";
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const PER = { week: WEEKS_PER_MONTH, month: 1, year: 1 / 12 };
+  const monthly = list => list.reduce((a, e) => a + n(e.amount) * (PER[e.per] ?? 1), 0);
+  const ceil = v => Math.ceil(v - 1e-9);
+
+  // Piece maths mirrors the spreadsheet formulas exactly.
+  function compute() {
+    const st = state.settings;
+    const overhead = monthly(state.biz);
+    const personal = monthly(state.personal);
+    const covered = personal * n(st.cover) / 100;
+    const taxRate = Math.min(n(st.tax), 90) / 100;
+    const goal = covered / (1 - taxRate);
+    const s = { rate: n(st.rate), margin: n(st.margin) / 100, overhead, personal, covered, taxRate, goal, hoursWeek: n(st.hours) };
+    s.hoursMonth = s.hoursWeek * WEEKS_PER_MONTH;
+
+    const active = state.pieces.filter(p => has(p.price));
+    const totalSold = active.reduce((a, p) => a + n(p.sold), 0);
+    const share = totalSold ? overhead / totalSold : 0;
+    const rows = state.pieces.map(p => {
+      if (!has(p.price)) return { p, empty: true };
+      const price = n(p.price), fee = n(p.feePct) / 100, sold = n(p.sold);
+      const mc = n(p.materials) + n(p.components);
+      const direct = mc + n(p.firing) + n(p.packaging) + n(p.shipping) + n(p.other) + mc * n(p.waste) / 100 + price * fee + n(p.fixedFee);
+      const left = price - direct;
+      const hours = n(p.make) + n(p.finish);
+      const perHr = hours ? left / hours : 0;
+      const realHr = hours ? (left - share) / hours : 0;
+      const verdict = realHr >= s.rate ? "keeper" : realHr >= s.rate * 0.6 ? "raise" : "rethink";
+      const costNoPct = direct - price * fee;
+      const denom = 1 - fee - s.margin;
+      const ppValid = denom > 0;
+      const pp = ppValid ? (costNoPct + hours * s.rate + share) / denom : 0;
+      const leftAtPP = pp * (1 - fee) - costNoPct;
+      return { p, price, fee, sold, direct, costNoPct, left, leftPct: price ? left / price : 0, hours, perHr, share, realHr, verdict, pp, ppValid, diff: pp - price, leftAtPP };
+    });
+    const live = rows.filter(r => !r.empty);
+    const sum = f => live.reduce((a, r) => a + f(r), 0);
+    const month = {
+      sales: sum(r => r.price * r.sold),
+      netSales: sum(r => r.price * (1 - r.fee) * r.sold),
+      pieces: sum(r => r.sold),
+      left: sum(r => r.left * r.sold),
+      overhead,
+      hours: sum(r => r.hours * r.sold)
+    };
+    month.profit = month.left - overhead;
+    month.realHr = month.hours ? month.profit / month.hours : 0;
+    month.profitPP = sum(r => r.leftAtPP * r.sold) - overhead;
+    month.extra = month.profitPP - month.profit;
+    month.leftPP = month.profitPP + overhead;
+    return { s, rows, live, month, need: goal + overhead };
+  }
+
+  const VERDICT = { keeper: "Keeper", raise: "Raise the price", rethink: "Rethink this piece" };
+  const VERDICT_NOTE = {
+    keeper: "After costs and overhead, this piece earns at least your hourly rate.",
+    raise: "It earns 60–99% of your rate. A price increase or a faster process will probably fix it.",
+    rethink: "It earns less than 60% of your rate. Raise the price a lot, make it faster, or call it a “love it” piece."
+  };
+
+  const $ = id => document.getElementById(id);
+  let confirmDelete = false, confirmReset = false;
+
+  function current() {
+    if (state.selected >= state.pieces.length) state.selected = state.pieces.length - 1;
+    return state.pieces[state.selected];
+  }
+
+  function renderSettings() {
+    document.querySelectorAll("[data-setting]").forEach(el => {
+      if (document.activeElement !== el) el.value = state.settings[el.dataset.setting] ?? "";
+    });
+  }
+
+  function renderList(key) {
+    const placeholder = key === "biz" ? "e.g. Booth fees" : "e.g. Childcare";
+    $("list-" + key).innerHTML = state[key].map((e, i) => `
+      <div class="exp-row">
+        <div class="inbox nm"><input id="${key}-${e.id}-name" type="text" maxlength="50" aria-label="Expense name" placeholder="${placeholder}" data-list="${key}" data-i="${i}" data-k="name" value="${esc(e.name ?? "")}"></div>
+        <div class="inbox"><span>$</span><input id="${key}-${e.id}-amt" inputmode="decimal" aria-label="Amount for ${esc(e.name || "this expense")}" data-list="${key}" data-i="${i}" data-k="amount" value="${esc(e.amount ?? "")}"></div>
+        <select class="per" id="${key}-${e.id}-per" aria-label="How often" data-list="${key}" data-i="${i}" data-k="per">
+          ${["week", "month", "year"].map(p => `<option value="${p}"${(e.per || "month") === p ? " selected" : ""}>per ${p}</option>`).join("")}
+        </select>
+        <button class="x" data-act="del-exp" data-list="${key}" data-i="${i}" aria-label="Remove ${esc(e.name || "this expense")}">×</button>
+      </div>`).join("") || `<p class="hint" style="color:var(--muted)">No expenses yet. Add your first one below.</p>`;
+  }
+
+  function renderForm() {
+    const p = current();
+    confirmDelete = false;
+    $("form").innerHTML = FIELDS.map(g => `
+      <div class="group">
+        <h3>${g.group}</h3>
+        <div class="group-grid">
+          ${g.items.map(f => `
+            <div class="field${f.wide ? " wide" : ""}">
+              <label for="f-${f.k}">${f.label}</label>
+              <div class="inbox">${f.pre ? `<span>${f.pre}</span>` : ""}<input id="f-${f.k}" data-field="${f.k}" ${f.type === "text" ? 'type="text" maxlength="60"' : 'inputmode="decimal"'} value="${esc(p[f.k] ?? "")}">${f.post ? `<span>${f.post}</span>` : ""}</div>
+              ${f.hint ? `<div class="hint">${f.hint}</div>` : ""}
+            </div>`).join("")}
+        </div>
+      </div>`).join("") + `<div class="form-foot" id="form-foot"></div>`;
+    renderFormFoot();
+  }
+
+  function renderFormFoot() {
+    const foot = $("form-foot");
+    if (!foot) return;
+    if (state.pieces.length <= 1) { foot.innerHTML = ""; return; }
+    foot.innerHTML = confirmDelete
+      ? `<div class="confirm">Remove “${esc(current().name || "this piece")}”? <button class="btn small danger" data-act="del-yes">Remove</button><button class="btn small" data-act="del-no">Keep it</button></div>`
+      : `<button class="linkish" data-act="del">Remove this piece</button>`;
+  }
+
+  function renderTotals(c) {
+    const s = c.s;
+    $("biz-total").textContent = money(s.overhead);
+    $("personal-total").textContent = money(s.personal);
+    $("goal-math").textContent = `${money(s.personal, 0)} × ${n(state.settings.cover)}%` + (s.taxRate > 0 ? ` = ${money(s.covered, 0)}, plus ${pct(s.taxRate)} set aside for tax` : "") + " = your monthly income goal";
+    $("goal-total").textContent = money(s.goal, 0) + " a month";
+    document.querySelectorAll("#cover-quick button").forEach(b => b.setAttribute("aria-pressed", String(n(state.settings.cover) === +b.dataset.v)));
+  }
+
+  function renderShelf(c) {
+    $("shelf").innerHTML = c.rows.map((r, i) => `
+      <button class="chip" data-select="${i}" aria-current="${i === state.selected}">
+        <span class="nm">${esc(r.p.name || "Untitled piece")}</span>
+        <span class="meta"><span class="num">${r.empty ? "No price yet" : money(r.price)}</span>${r.empty ? '<span class="pill none">—</span>' : `<span class="pill ${r.verdict}">${VERDICT[r.verdict]}</span>`}</span>
+      </button>`).join("") +
+      (state.pieces.length < MAX_PIECES ? `<button class="chip add" data-act="add">+ Add a piece</button>` : "");
+  }
+
+  function renderResults(c) {
+    const r = c.rows[state.selected];
+    if (r.empty) {
+      $("results").innerHTML = `<div class="verdict-card none"><div class="v">Add a price</div><p>Enter a current selling price to see what this piece earns and what it should cost.</p></div>`;
+      return;
+    }
+    const rate = c.s.rate;
+    const scaleMax = Math.max(rate * 1.5, r.realHr * 1.05, 1);
+    const fillW = Math.max(0, Math.min(100, r.realHr / scaleMax * 100));
+    const t60 = rate * 0.6 / scaleMax * 100, t100 = rate / scaleMax * 100;
+    const maxWeek = r.hours > 0 && c.s.hoursWeek > 0 ? Math.floor(c.s.hoursWeek / r.hours) : null;
+    $("results").innerHTML = `
+      <div class="verdict-card ${r.verdict}">
+        <h3>Verdict</h3>
+        <div class="v">${VERDICT[r.verdict]}</div>
+        <p>Your time really earns <strong class="num">${money(r.realHr)}/hour</strong> on this piece after costs and overhead. ${VERDICT_NOTE[r.verdict]}</p>
+        <div class="meter" aria-hidden="true">
+          <div class="meter-track"><div class="meter-fill" style="width:${fillW}%"></div>
+            <div class="meter-tick" style="left:${t60}%"></div><div class="meter-tick" style="left:${t100}%"></div></div>
+          <div class="meter-labels"><span style="left:${t60}%">60%</span><span style="left:${t100}%">${money(rate, 0)} goal</span></div>
+        </div>
+      </div>
+      <div class="pp">
+        <div class="label">Your Profit Price</div>
+        ${r.ppValid ? `<div class="big num">${money(r.pp)}</div>
+        <div class="diff num">${Math.abs(r.diff) < 0.005 ? "Same as your current price" : r.diff > 0 ? `Raise by ${money(r.diff)} from your current ${money(r.price)}` : `<strong class="pos">You're already ${money(-r.diff)} above it.</strong> Your current ${money(r.price)} more than covers everything.`}</div>` :
+        `<p>Your fees plus profit margin add up to 100% or more, so no price can cover them. Lower one of them.</p>`}
+      </div>
+      <dl class="rows">
+        <div><dt>Total direct costs per piece</dt><dd>${money(r.direct)}</dd></div>
+        <div><dt>What's left after direct costs</dt><dd class="${r.left < 0 ? "neg" : ""}">${money(r.left)} <span style="color:var(--muted);font-weight:400">(${pct(r.leftPct)})</span></dd></div>
+        <div><dt>Total hours per piece</dt><dd>${hrs(r.hours)}</dd></div>
+        <div><dt>Most you can make in your hours</dt><dd>${maxWeek === null ? "—" : maxWeek.toLocaleString() + " a week"}</dd></div>
+        <div><dt>Time earns per hour, before overhead</dt><dd>${money(r.perHr)}</dd></div>
+        <div><dt>This piece's share of overhead${c.s.overhead > 0 ? "" : ' <span style="font-size:12px">(add in Step 5)</span>'}</dt><dd>${money(r.share)}</dd></div>
+        <div class="strong"><dt>Time REALLY earns per hour</dt><dd class="${r.realHr < 0 ? "neg" : ""}">${money(r.realHr)}</dd></div>
+        ${r.ppValid ? `<div><dt>What's left at your Profit Price</dt><dd>${money(r.leftAtPP)}</dd></div>` : ""}
+      </dl>`;
+  }
+
+  function renderCompare(c) {
+    $("compare").innerHTML = `
+      <thead><tr><th>Piece</th><th>Price</th><th>Sold/mo</th><th>Left per sale</th><th>Contributes /month</th><th>Real $/hour</th><th>Profit Price</th><th>Change</th><th>Verdict</th></tr></thead>
+      <tbody>${c.rows.map((r, i) => r.empty
+        ? `<tr class="clickable" data-select="${i}"><td>${esc(r.p.name || "Untitled piece")}</td><td colspan="8" style="text-align:left;color:var(--muted)">Add a price to include this piece</td></tr>`
+        : `<tr class="clickable" data-select="${i}">
+            <td><strong>${esc(r.p.name || "Untitled piece")}</strong></td>
+            <td>${money(r.price)}</td><td>${n(r.p.sold)}</td>
+            <td class="${r.left < 0 ? "neg" : ""}">${money(r.left)}</td>
+            <td class="${r.left < 0 ? "neg" : ""}"><strong>${money(r.left * r.sold)}</strong></td>
+            <td class="${r.realHr < 0 ? "neg" : ""}">${money(r.realHr)}</td>
+            <td><strong>${r.ppValid ? money(r.pp) : "—"}</strong></td>
+            <td class="${r.diff < -0.005 ? "pos" : ""}">${!r.ppValid ? "—" : r.diff > 0.005 ? "+" + money(r.diff) : r.diff < -0.005 ? money(-r.diff) + " above" : "On target"}</td>
+            <td><span class="pill ${r.verdict}">${VERDICT[r.verdict]}</span></td>
+          </tr>`).join("")}</tbody>
+      ${c.live.length ? `<tfoot><tr><td>All pieces</td><td></td><td>${c.month.pieces}</td><td></td><td class="${c.month.left < 0 ? "neg" : ""}">${money(c.month.left)}</td><td colspan="4"></td></tr></tfoot>` : ""}`;
+  }
+
+  function renderBridge(c) {
+    const m = c.month, s = c.s;
+    const toward = m.left - s.overhead;
+    const share = s.goal > 0 ? Math.max(0, toward) / s.goal : 0;
+    const gap = s.goal - toward;
+    $("bridge").innerHTML = `
+      <h3>What's left for you</h3>
+      <div class="ln"><span>Your pieces contribute (Step 4)</span><strong>${money(m.left)}</strong></div>
+      <div class="ln"><span>Minus business expenses</span><strong>${money(-s.overhead)}</strong></div>
+      <div class="ln sum"><span>Toward your income goal</span><strong class="${toward < 0 ? "neg" : ""}">${money(toward)}</strong></div>
+      <div class="ln"><span>Your income goal (Step 1)</span><strong>${money(s.goal)}</strong></div>
+      <div class="gauge ${share >= 1 ? "keeper" : share >= 0.6 ? "raise" : "rethink"}">
+        <div class="meter" aria-hidden="true"><div class="meter-track"><div class="meter-fill" style="width:${Math.min(100, share * 100)}%"></div></div></div>
+      </div>
+      <p>${s.goal <= 0 ? `Fill in Step 1 to see how close this gets you to the income you'd love.` : toward < 0 ? `Your pieces don't cover your business expenses yet, so nothing reaches your goal.` : gap > 0.005 ? `That covers ${pct(share)} of your goal. You're ${money(gap)} a month short.` : `That covers your whole goal, with ${money(-gap)} to spare.`}</p>`;
+  }
+
+  function renderMonth(c) {
+    const m = c.month, s = c.s;
+    const toGoal = m.profit - s.goal;
+    const spare = s.hoursMonth - m.hours;
+    $("month").innerHTML = `
+      <div class="month-top">
+        <div><div class="cap">Monthly profit now</div><div class="headline-num num ${m.profit < 0 ? "neg" : ""}">${money(m.profit, 0)}</div></div>
+        <div><div class="cap">At your Profit Prices</div><div class="headline-num num" style="color:var(--accent)">${money(m.profitPP, 0)}</div></div>
+        <div><div class="cap">Your income goal</div><div class="headline-num num">${money(s.goal, 0)}</div></div>
+      </div>
+      <div class="month-grid">
+        <dl class="rows">
+          <div><dt>Total sales per month</dt><dd>${money(m.sales)}</dd></div>
+          <div><dt>Total left after direct costs</dt><dd>${money(m.left)}</dd></div>
+          <div><dt>Minus monthly overhead</dt><dd>${money(-m.overhead)}</dd></div>
+          <div class="strong"><dt>Business profit now (before tax)</dt><dd class="${m.profit < 0 ? "neg" : ""}">${money(m.profit)}</dd></div>
+          <div><dt>Compared with your income goal</dt><dd class="${toGoal < 0 ? "neg" : "pos"}">${toGoal < 0 ? money(-toGoal) + " short" : money(toGoal) + " over"}</dd></div>
+        </dl>
+        <dl class="rows">
+          <div><dt>Hours per month to make &amp; sell these</dt><dd>${hrs(m.hours)}</dd></div>
+          <div><dt>Hours you have per month</dt><dd>${hrs(s.hoursMonth)}</dd></div>
+          <div><dt>${spare >= 0 ? "Hours to spare" : "Hours over your limit"}</dt><dd class="${spare < 0 ? "neg" : ""}">${hrs(Math.abs(spare))}</dd></div>
+          <div><dt>What you're really earning per hour now</dt><dd>${money(m.realHr)}</dd></div>
+          <div class="strong"><dt>Extra each month at your Profit Prices</dt><dd class="${m.extra > 0 ? "pos" : ""}">${signed(m.extra)}</dd></div>
+        </dl>
+      </div>`;
+  }
+
+  // What it takes to leave `need` behind each month when each sale leaves `left` and takes `hours`.
+  function plan(c, left, hours) {
+    if (left <= 0) return null;
+    const perMonth = ceil(c.need / left);
+    const hoursWeek = perMonth * hours / WEEKS_PER_MONTH;
+    return { perMonth, perWeek: ceil(perMonth / WEEKS_PER_MONTH), hoursWeek, fits: hoursWeek <= c.s.hoursWeek + 1e-9 };
+  }
+  // Lowest price that reaches the goal if every studio hour goes to this piece.
+  function priceToFit(c, r) {
+    if (r.hours <= 0 || c.s.hoursMonth <= 0 || r.fee >= 1) return null;
+    const leftNeeded = c.need / (c.s.hoursMonth / r.hours);
+    return (leftNeeded + r.costNoPct) / (1 - r.fee);
+  }
+
+  function renderGoal(c) {
+    const s = c.s, m = c.month;
+    $("need").innerHTML = `Sales need to leave <strong class="num">${money(c.need, 0)}/month</strong>: your ${money(s.goal, 0)} goal plus ${money(s.overhead, 0)} overhead. You have <strong class="num">${hrs(s.hoursWeek)}</strong> a week.`;
+
+    // Your current mix, scaled up to reach the goal.
+    let mix = null;
+    if (c.live.length && m.left > 0 && m.hours > 0) {
+      const factor = c.need / m.left;
+      const hoursWeek = m.hours * factor / WEEKS_PER_MONTH;
+      const scaleToCap = s.hoursMonth / m.hours;
+      const raise = m.netSales > 0 && scaleToCap > 0 ? (c.need / scaleToCap - m.left) / m.netSales : null;
+      mix = { perMonth: ceil(m.pieces * factor), perWeek: ceil(m.pieces * factor / WEEKS_PER_MONTH), hoursWeek, fits: hoursWeek <= s.hoursWeek + 1e-9, raise, maxWeek: Math.floor(m.pieces * scaleToCap / WEEKS_PER_MONTH) };
+    }
+
+    let card;
+    if (s.goal <= 0) card = `<div class="capacity none"><div class="v">Fill in Step 1 first</div><p>Add your personal expenses and choose how much your art should cover. Then this shows whether that goal fits the hours you have.</p></div>`;
+    else if (!c.live.length) card = `<div class="capacity none"><div class="v">Add a piece with a price</div></div>`;
+    else if (!mix) card = `<div class="capacity over"><div class="v">Your current mix doesn't cover its costs</div><p>Each month your pieces leave less than nothing after direct costs, so selling more won't reach a goal. Start with the Profit Prices above.</p></div>`;
+    else {
+      const top = Math.max(mix.hoursWeek, s.hoursWeek, 1) * 1.1;
+      const fillW = Math.min(100, mix.hoursWeek / top * 100), tick = s.hoursWeek / top * 100;
+      const what = mix.fits
+        ? `You'd need about <strong>${hrs(mix.hoursWeek)}</strong> a week, selling ${mix.perWeek.toLocaleString()} pieces a week in the same mix you sell now. That fits in your ${hrs(s.hoursWeek)}.`
+        : `You'd need about <strong>${hrs(mix.hoursWeek)}</strong> a week, selling ${mix.perWeek.toLocaleString()} pieces a week in the same mix you sell now. You have ${hrs(s.hoursWeek)}, so that's ${hrs(mix.hoursWeek - s.hoursWeek)} more than you can give. ${mix.raise !== null ? `To reach your goal inside your hours, raise all your prices by about <strong>${Math.ceil(mix.raise * 100)}%</strong>, or switch toward pieces that fit below.` : ""}`;
+      card = `
+        <div class="capacity ${mix.fits ? "fits" : "over"}">
+          <h3>Your current mix</h3>
+          <div class="v">${mix.fits ? "Your goal fits your hours" : "Your goal doesn't fit your hours yet"}</div>
+          <p>${what}</p>
+          <div class="meter" aria-hidden="true">
+            <div class="meter-track"><div class="meter-fill" style="width:${fillW}%"></div><div class="meter-tick" style="left:${tick}%"></div></div>
+            <div class="meter-labels"><span style="left:${tick}%">your ${hrs(s.hoursWeek)}</span></div>
+          </div>
+        </div>`;
+    }
+    $("capacity").innerHTML = card;
+    $("goal").hidden = s.goal <= 0;
+
+    const status = pl => !pl ? `<td colspan="3" class="neg" style="text-align:center">Loses money per sale</td>`
+      : `<td>${pl.perWeek.toLocaleString()}</td><td>${hrs(pl.hoursWeek)}</td><td><span class="pill ${pl.fits ? "fits" : "over"}">${pl.fits ? "Fits" : "Over by " + hrs(pl.hoursWeek - s.hoursWeek)}</span></td>`;
+    const mixRow = mix ? `
+      <tr class="mix"><td><strong>Your current mix</strong><small>all pieces, same proportions</small></td>
+        <td>${mix.maxWeek.toLocaleString()}</td>
+        ${status(mix)}
+        <td colspan="3" style="text-align:center;color:var(--muted)">see the pieces below</td>
+        <td>${mix.raise === null ? "—" : mix.raise <= 0 ? '<span class="pos">Prices already work</span>' : "Raise all " + Math.ceil(mix.raise * 100) + "%"}</td></tr>` : "";
+
+    $("goal").innerHTML = `
+      <thead>
+        <tr class="band"><th></th><th></th><th colspan="3" style="text-align:center">At current price</th><th colspan="3" style="text-align:center">At Profit Price</th><th></th></tr>
+        <tr><th>Piece</th><th>Most you can make /week</th><th>Needed /week</th><th>Hours /week</th><th>In your hours?</th><th>Needed /week</th><th>Hours /week</th><th>In your hours?</th><th>Price to fit your hours</th></tr>
+      </thead>
+      <tbody>${mixRow}${c.live.map(r => {
+        const maxWeek = r.hours > 0 && s.hoursWeek > 0 ? Math.floor(s.hoursWeek / r.hours).toLocaleString() : "—";
+        const fitPrice = priceToFit(c, r);
+        return `<tr><td><strong>${esc(r.p.name || "Untitled piece")}</strong></td><td>${maxWeek}</td>${status(plan(c, r.left, r.hours))}${r.ppValid ? status(plan(c, r.leftAtPP, r.hours)) : '<td colspan="3" style="text-align:center">—</td>'}
+          <td>${fitPrice === null ? "—" : fitPrice <= r.price ? `<span class="pos">${money(fitPrice)}</span><small>you're above it</small>` : `<strong>${money(fitPrice)}</strong>`}</td></tr>`;
+      }).join("")}
+      </tbody>`;
+  }
+
+  function renderReset() {
+    $("reset-area").innerHTML = confirmReset
+      ? `<span class="confirm">Clear everything and go back to the examples? <button class="btn small danger" data-act="reset-yes">Start over</button><button class="btn small" data-act="reset-no">Cancel</button></span>`
+      : `<button class="btn" data-act="reset">Start over</button>`;
+  }
+
+  function renderOutputs() {
+    const c = compute();
+    renderTotals(c); renderShelf(c); renderResults(c); renderCompare(c); renderBridge(c); renderMonth(c); renderGoal(c);
+  }
+  function renderAll() { renderSettings(); renderList("biz"); renderList("personal"); renderForm(); renderOutputs(); renderReset(); }
+
+  document.addEventListener("input", e => {
+    const t = e.target;
+    if (t.dataset.setting) { state.settings[t.dataset.setting] = t.value; }
+    else if (t.dataset.field) { current()[t.dataset.field] = t.value; }
+    else if (t.dataset.list) { state[t.dataset.list][+t.dataset.i][t.dataset.k] = t.value; }
+    else return;
+    save(); renderOutputs();
+  });
+
+  document.addEventListener("click", e => {
+    const sel = e.target.closest("[data-select]");
+    if (sel) {
+      state.selected = +sel.dataset.select; save();
+      renderForm(); renderOutputs();
+      if (sel.tagName === "TR") document.getElementById("pieces-h").scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
+    const btn = e.target.closest("[data-act]");
+    if (!btn) return;
+    const act = btn.dataset.act;
+    if (act === "add") {
+      state.pieces.push(blankPiece(state.pieces.length + 1));
+      state.selected = state.pieces.length - 1; save();
+      renderForm(); renderOutputs();
+      $("f-name").focus(); $("f-name").select();
+    } else if (act === "add-exp") {
+      const key = btn.dataset.list, item = exp("", "");
+      state[key].push(item); save();
+      renderList(key); renderOutputs();
+      $(`${key}-${item.id}-name`).focus();
+    } else if (act === "del-exp") {
+      state[btn.dataset.list].splice(+btn.dataset.i, 1); save();
+      renderList(btn.dataset.list); renderOutputs();
+    } else if (act === "cover") {
+      state.settings.cover = +btn.dataset.v; save();
+      renderSettings(); renderOutputs();
+    }
+    else if (act === "del") { confirmDelete = true; renderFormFoot(); }
+    else if (act === "del-no") { confirmDelete = false; renderFormFoot(); }
+    else if (act === "del-yes") {
+      state.pieces.splice(state.selected, 1);
+      state.selected = Math.max(0, state.selected - 1); save();
+      renderForm(); renderOutputs();
+    }
+    else if (act === "reset") { confirmReset = true; renderReset(); }
+    else if (act === "reset-no") { confirmReset = false; renderReset(); }
+    else if (act === "reset-yes") { state = EXAMPLES(); confirmReset = false; save(); renderAll(); }
+  });
+
+  renderAll();
+})();
+</script>
+
+</body>
+</html>
