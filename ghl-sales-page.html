@@ -1,0 +1,544 @@
+<!-- The Profitable Artist Equation: sales page for a GoHighLevel Custom HTML/JS element.
+     Paste everything into one element, in a full-width section with no padding.
+     Before going live: replace the checkout link (search for CHECKOUT) and the orange [PLACEHOLDERS]. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap">
+<style>
+#pae, #pae * { box-sizing: border-box; }
+#pae h1, #pae h2, #pae h3, #pae p, #pae ul, #pae ol, #pae li, #pae figure, #pae blockquote { margin: 0; padding: 0; font-family: var(--body); color: inherit; letter-spacing: normal; text-transform: none; }
+#pae a { text-decoration: none; }
+#pae img { max-width: 100%; }
+#pae [hidden] { display: none !important; }
+#pae {
+  --bg: #F4EDE1;
+  --surface: #FFFBF4;
+  --ink: #2A2320;
+  --muted: #6B5F57;
+  --line: #E4D8C6;
+  --teal: #1F6F6B;
+  --mustard: #E2A72E;
+  --orange: #C4572C;
+  --olive: #74863A;
+  --mast: #4A3227;
+  --mast-ink: #FBF2E2;
+  --mast-muted: #D9C7B0;
+  --input: #FCF1D4;
+  --input-line: #E9D39A;
+  --good: #4D7A2E; --good-soft: #E8EFD9;
+  --warn: #A66F07; --warn-soft: #FBEBCB;
+  --bad: #B3462A; --bad-soft: #F8E1D7;
+  --ph: #FBE3D6; --ph-ink: #9A3D1C;
+  --display: "Jost", "Futura", "Century Gothic", "Avenir Next", system-ui, sans-serif;
+  --body: "Jost", "Futura", "Century Gothic", "Avenir Next", system-ui, sans-serif;
+  --radius: 14px;
+}
+#pae, #pae * { box-sizing: border-box; }
+#pae { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 18px; line-height: 1.6; }
+#pae h1, #pae h2, #pae h3 { font-family: var(--display); margin: 0; text-wrap: balance; line-height: 1.1; }
+#pae h1 { font-size: clamp(36px, 6vw, 62px); font-weight: 600; letter-spacing: -0.015em; }
+#pae h2 { font-size: clamp(28px, 4vw, 42px); font-weight: 600; letter-spacing: -0.01em; }
+#pae h3 { font-size: 21px; font-weight: 600; }
+#pae p { margin: 0; }
+#pae a { color: inherit; }
+#pae .num { font-variant-numeric: tabular-nums; }
+#pae .eyebrow { font-size: 13px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--orange); }
+#pae .lede { font-size: clamp(19px, 2vw, 22px); max-width: 52ch; }
+#pae .tm { font-size: .4em; vertical-align: super; font-weight: 500; }
+#pae .ph { background: var(--ph); color: var(--ph-ink); border: 1px dashed currentColor; border-radius: 6px; padding: 0 6px; font-weight: 600; font-size: .92em; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+#pae .ph-block { background: var(--ph); color: var(--ph-ink); border: 1.5px dashed currentColor; border-radius: var(--radius); padding: 18px 20px; font-size: 16px; }
+#pae .band { padding-block: clamp(56px, 9vw, 104px); padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+#pae .band.paper { background: var(--surface); border-block: 1px solid var(--line); }
+#pae .inner { max-width: 1080px; margin: 0 auto; display: grid; gap: 28px; }
+#pae .inner.narrow { max-width: 720px; }
+#pae .head { display: grid; gap: 12px; max-width: 720px; }
+#pae .btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; font: inherit; font-weight: 600; font-size: 18px; text-decoration: none; padding: 15px 28px; border-radius: 999px; border: 0; background: var(--mustard); color: #2A2320; cursor: pointer; transition: transform .15s ease, box-shadow .15s ease; box-shadow: 0 3px 0 #B9841B; }
+#pae .btn:hover { transform: translateY(-1px); box-shadow: 0 4px 0 #B9841B; }
+#pae .btn:active { transform: translateY(2px); box-shadow: 0 1px 0 #B9841B; }
+#pae .btn:focus-visible, #pae .pc input:focus-visible, #pae summary:focus-visible { outline: 3px solid var(--teal); outline-offset: 3px; }
+#pae .btn-note { font-size: 15px; color: var(--muted); }
+#pae .cta-row { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 20px; }
+#pae .mast { position: relative; overflow: hidden; isolation: isolate; background: var(--mast); color: var(--mast-ink); padding-block: clamp(40px, 7vw, 84px) clamp(48px, 8vw, 96px); padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+#pae .mast .inner { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); align-items: center; gap: clamp(32px, 5vw, 64px); }
+#pae .mast-copy { display: grid; gap: 20px; min-width: 0; }
+#pae .byline { color: var(--mustard); font-weight: 500; letter-spacing: .12em; text-transform: uppercase; font-size: 13px; }
+#pae .mast h1 em { font-style: normal; color: var(--mustard); }
+#pae .mast .lede { color: var(--mast-muted); }
+#pae .mast .btn-note { color: var(--mast-muted); }
+#pae .shape { position: absolute; border-radius: 50%; z-index: -1; pointer-events: none; }
+#pae .s-sun { width: 360px; height: 360px; background: var(--orange); right: -140px; top: -170px; opacity: .9; }
+#pae .s-arc { width: 300px; height: 300px; border: 34px solid var(--teal); left: -170px; bottom: -190px; }
+#pae .s-dot { width: 22px; height: 22px; background: var(--mustard); left: 46%; top: 54px; }
+#pae .s-ring { width: 64px; height: 64px; border: 6px solid var(--olive); right: 9%; bottom: 40px; }
+#pae .pc { background: var(--surface); color: var(--ink); border-radius: 22px; padding: clamp(20px, 3.5vw, 30px); display: grid; gap: 16px; box-shadow: 0 18px 40px rgba(20, 10, 5, .35); min-width: 0; }
+#pae .pc-head { display: grid; gap: 4px; }
+#pae .pc-head h2 { font-size: 24px; }
+#pae .pc-head p { font-size: 15px; color: var(--muted); }
+#pae .pc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+#pae .field { display: grid; gap: 5px; min-width: 0; }
+#pae .field label { font-weight: 600; font-size: 14px; }
+#pae .inbox { display: flex; align-items: center; background: var(--input); border: 1px solid var(--input-line); border-radius: 9px; }
+#pae .inbox span { padding: 0 2px 0 11px; color: var(--muted); font-size: 15px; white-space: nowrap; }
+#pae .inbox span.post { padding: 0 11px 0 2px; }
+#pae .inbox input { flex: 1; min-width: 0; width: 100%; border: 0; background: transparent; color: var(--ink); font: inherit; font-size: 17px; font-variant-numeric: tabular-nums; padding: 9px 10px; outline: none; }
+#pae .inbox:focus-within { border-color: var(--mustard); box-shadow: 0 0 0 2px var(--mustard); }
+#pae .pc-out { border-top: 2px solid var(--ink); padding-top: 14px; display: grid; gap: 10px; }
+#pae .pc-line { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+#pae .pc-line .k { font-size: 15px; color: var(--muted); }
+#pae .pc-big { font-family: var(--display); font-size: 40px; font-weight: 600; line-height: 1; font-variant-numeric: tabular-nums; }
+#pae .pc-msg { font-size: 15px; }
+#pae .pc-foot { font-size: 13px; color: var(--muted); }
+#pae .pill { display: inline-block; font-size: 13px; font-weight: 700; padding: 4px 11px; border-radius: 999px; white-space: nowrap; }
+#pae .pill.keeper { background: var(--good-soft); color: var(--good); }
+#pae .pill.raise { background: var(--warn-soft); color: var(--warn); }
+#pae .pill.rethink { background: var(--bad-soft); color: var(--bad); }
+#pae .pain { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 40px; padding: 0; margin: 0; list-style: none; }
+#pae .pain li { padding: 18px 0 18px 34px; border-top: 1px solid var(--line); position: relative; }
+#pae .pain li::before { content: ""; position: absolute; left: 4px; top: 27px; width: 12px; height: 12px; border-radius: 50%; border: 2.5px solid var(--orange); }
+#pae .turn { font-size: clamp(21px, 2.4vw, 26px); font-weight: 500; max-width: 40ch; }
+#pae .equation { display: flex; flex-wrap: wrap; align-items: stretch; gap: 10px; }
+#pae .eq-term { flex: 1 1 150px; background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; display: grid; gap: 6px; align-content: start; min-width: 0; }
+#pae .eq-term b { font-family: var(--display); font-size: 20px; font-weight: 600; }
+#pae .eq-term span { font-size: 15px; color: var(--muted); }
+#pae .eq-term.c1 { border-top: 5px solid var(--teal); }
+#pae .eq-term.c2 { border-top: 5px solid var(--olive); }
+#pae .eq-term.c3 { border-top: 5px solid var(--mustard); }
+#pae .eq-term.c4 { border-top: 5px solid var(--orange); }
+#pae .eq-term.total { background: var(--mast); color: var(--mast-ink); border-color: var(--mast); }
+#pae .eq-term.total span { color: var(--mast-muted); }
+#pae .op { align-self: center; font-family: var(--display); font-size: 30px; font-weight: 500; color: var(--muted); padding: 0 2px; }
+#pae .steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 40px; counter-reset: s; }
+#pae .steps li { display: grid; grid-template-columns: 46px minmax(0, 1fr); gap: 16px; align-items: start; padding-block: 8px; }
+#pae .steps .badge { width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; font-family: var(--display); font-weight: 600; font-size: 19px; color: #FFFBF4; }
+#pae .steps li:nth-child(4n+1) .badge { background: var(--teal); }
+#pae .steps li:nth-child(4n+2) .badge { background: var(--olive); }
+#pae .steps li:nth-child(4n+3) .badge { background: var(--mustard); color: #2A2320; }
+#pae .steps li:nth-child(4n+4) .badge { background: var(--orange); }
+#pae .steps h3 { font-size: 19px; margin-bottom: 4px; }
+#pae .steps p { font-size: 16px; color: var(--muted); }
+#pae .verdicts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+#pae .verdict { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; display: grid; gap: 12px; align-content: start; }
+#pae .verdict p { font-size: 16px; }
+#pae .verdict .ex { font-size: 14px; color: var(--muted); border-top: 1px dashed var(--line); padding-top: 10px; font-variant-numeric: tabular-nums; }
+#pae .inside { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+#pae .item { border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; display: grid; gap: 8px; align-content: start; background: var(--bg); }
+#pae .item .tag { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--teal); }
+#pae .item p { font-size: 16px; color: var(--muted); }
+#pae .fit { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px; }
+#pae .fit ul { list-style: none; padding: 0; margin: 14px 0 0; display: grid; gap: 12px; }
+#pae .fit li { padding-left: 30px; position: relative; font-size: 17px; }
+#pae .fit .yes li::before, #pae .fit .no li::before { position: absolute; left: 0; top: 0; font-weight: 700; }
+#pae .fit .yes li::before { content: "✓"; color: var(--good); }
+#pae .fit .no li::before { content: "✕"; color: var(--bad); }
+#pae .about { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: clamp(24px, 5vw, 56px); align-items: center; }
+#pae .portrait { aspect-ratio: 4 / 5; max-width: 100%; border-radius: 160px 160px 18px 18px; background: var(--ph); color: var(--ph-ink); border: 1.5px dashed currentColor; display: grid; place-items: center; text-align: center; font-weight: 600; font-size: 15px; padding: 20px; }
+#pae .about-copy { display: grid; gap: 16px; min-width: 0; }
+#pae .quotes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+#pae .quote { margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; display: grid; gap: 14px; align-content: space-between; }
+#pae .quote blockquote { margin: 0; font-size: 17px; }
+#pae .quote figcaption { font-size: 14px; color: var(--muted); }
+#pae .quote .result { font-family: var(--display); font-size: 26px; font-weight: 600; color: var(--teal); line-height: 1.1; }
+#pae .offer { position: relative; overflow: hidden; isolation: isolate; background: var(--mast); color: var(--mast-ink); border-radius: 26px; padding: clamp(26px, 5vw, 52px); display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 48px); }
+#pae .offer .s-sun { width: 220px; height: 220px; right: -90px; top: -110px; }
+#pae .offer h2 { color: var(--mast-ink); }
+#pae .stack { list-style: none; margin: 18px 0 0; padding: 0; display: grid; }
+#pae .stack li { display: flex; justify-content: space-between; gap: 14px; padding: 11px 0; border-bottom: 1px solid rgba(251, 242, 226, .18); font-size: 16px; }
+#pae .stack li span:last-child { color: var(--mast-muted); white-space: nowrap; }
+#pae .buy { background: var(--surface); color: var(--ink); border-radius: 18px; padding: 26px; display: grid; gap: 14px; align-content: start; }
+#pae .buy .price { font-family: var(--display); font-size: 54px; font-weight: 600; line-height: 1; }
+#pae .buy .plan { font-size: 15px; color: var(--muted); }
+#pae .buy .btn { width: 100%; }
+#pae .guarantee { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 12px; align-items: start; font-size: 15px; border-top: 1px solid var(--line); padding-top: 14px; }
+#pae .seal { width: 44px; height: 44px; border-radius: 50%; border: 3px solid var(--olive); display: grid; place-items: center; color: var(--olive); font-weight: 700; font-size: 18px; }
+#pae .faq { display: grid; border-top: 1px solid var(--line); }
+#pae .faq details { border-bottom: 1px solid var(--line); }
+#pae .faq summary { cursor: pointer; list-style: none; padding: 20px 40px 20px 0; font-family: var(--display); font-weight: 600; font-size: 19px; position: relative; }
+#pae .faq summary::-webkit-details-marker { display: none; }
+#pae .faq summary::after { content: "+"; position: absolute; right: 6px; top: 14px; font-size: 28px; font-weight: 400; color: var(--orange); transition: transform .2s ease; }
+#pae .faq details[open] summary::after { transform: rotate(45deg); }
+#pae .faq .a { padding: 0 0 22px; color: var(--muted); max-width: 62ch; font-size: 17px; display: grid; gap: 10px; }
+#pae .close { text-align: center; justify-items: center; }
+#pae .close .lede { margin-inline: auto; }
+#pae footer { padding-block: 28px 40px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); text-align: center; font-size: 14px; color: var(--muted); }
+@media (max-width: 860px) {
+#pae .mast .inner, #pae .offer, #pae .about { grid-template-columns: 1fr; }
+#pae .verdicts, #pae .quotes { grid-template-columns: 1fr; }
+#pae .portrait { max-width: 240px; }
+}
+@media (max-width: 640px) {
+#pae { font-size: 17px; }
+#pae .pain, #pae .steps, #pae .inside, #pae .fit { grid-template-columns: 1fr; }
+#pae .op { flex-basis: 100%; text-align: center; line-height: 1; }
+#pae .s-dot { display: none; }
+}
+@media (max-width: 380px) {
+#pae .pc-grid { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+#pae, #pae * { transition: none !important; }
+}
+</style>
+<div id="pae">
+<!-- ========== MASTHEAD ========== -->
+<header class="mast">
+  <span class="shape s-sun" aria-hidden="true"></span>
+  <span class="shape s-arc" aria-hidden="true"></span>
+  <span class="shape s-dot" aria-hidden="true"></span>
+  <span class="shape s-ring" aria-hidden="true"></span>
+  <div class="inner">
+    <div class="mast-copy">
+      <p class="byline">A pricing &amp; profit course by Michelle Frost</p>
+      <h1>Find out what your art <em>actually pays you</em>.</h1>
+      <p class="lede">The Profitable Artist Equation<span class="tm">™</span> shows you what every piece you make really earns after materials, fees and studio costs. Then it gives you the price that pays you properly. You get a clear plan, not a guess.</p>
+      <div class="cta-row">
+        <a class="btn" href="#pae-enroll">Join the course</a>
+        <span class="btn-note">$47 · For makers who sell what they make</span>
+      </div>
+    </div>
+
+    <form class="pc" id="pae-pc" aria-labelledby="pae-pc-h" novalidate>
+      <div class="pc-head">
+        <h2 id="pae-pc-h">60-second price check</h2>
+        <p>Pick one piece you sell. Type in the yellow boxes.</p>
+      </div>
+      <div class="pc-grid">
+        <div class="field">
+          <label for="pae-pc-price">Selling price</label>
+          <div class="inbox"><span>$</span><input id="pae-pc-price" inputmode="decimal" value="85"></div>
+        </div>
+        <div class="field">
+          <label for="pae-pc-costs">Materials &amp; packaging</label>
+          <div class="inbox"><span>$</span><input id="pae-pc-costs" inputmode="decimal" value="22"></div>
+        </div>
+        <div class="field">
+          <label for="pae-pc-hours">Hours to make it</label>
+          <div class="inbox"><input id="pae-pc-hours" inputmode="decimal" value="3.5"><span class="post">hrs</span></div>
+        </div>
+        <div class="field">
+          <label for="pae-pc-rate">Hourly rate you want</label>
+          <div class="inbox"><span>$</span><input id="pae-pc-rate" inputmode="decimal" value="35"><span class="post">/hr</span></div>
+        </div>
+      </div>
+      <div class="pc-out" aria-live="polite">
+        <div class="pc-line">
+          <span class="k">This piece pays you</span>
+          <span id="pae-pc-verdict" class="pill raise">Raise the price</span>
+        </div>
+        <div class="pc-big" id="pae-pc-wage">$16.42/hr</div>
+        <p class="pc-msg" id="pae-pc-msg">To be a Keeper, it needs to sell for about <strong>$155</strong>.</p>
+      </div>
+      <p class="pc-foot">Example numbers to start. This includes a 6.5% selling fee. The full calculator also counts your monthly overhead and profit margin, so your real price is usually higher still.</p>
+    </form>
+  </div>
+</header>
+
+<!-- ========== PROBLEM ========== -->
+<section class="band" aria-labelledby="pae-pain-h">
+  <div class="inner">
+    <div class="head">
+      <p class="eyebrow">Sound familiar?</p>
+      <h2 id="pae-pain-h">You're selling. So why doesn't it feel like a business?</h2>
+    </div>
+    <ul class="pain">
+      <li>You set your prices by looking at what everyone else charges on Etsy and at the market.</li>
+      <li>You had a great show weekend, and somehow there's still not much left once the bills are paid.</li>
+      <li>You've never counted your hours, because you're a little afraid of the answer.</li>
+      <li>Someone said "you should charge more" and you didn't know how much more, or why.</li>
+      <li>Your best-selling piece might be the one costing you the most. You can't tell.</li>
+      <li>You'd love your art to pay for real things: the mortgage, the car, a day off.</li>
+    </ul>
+    <p class="turn">None of this means you're bad at business. It means nobody gave you the equation.</p>
+  </div>
+</section>
+
+<!-- ========== THE EQUATION ========== -->
+<section class="band paper" aria-labelledby="pae-eq-h">
+  <div class="inner">
+    <div class="head">
+      <p class="eyebrow">The method</p>
+      <h2 id="pae-eq-h">A profitable price has four jobs</h2>
+      <p class="lede">Most artists' prices only cover the first one. The course shows you how to build all four into every piece, using your own numbers.</p>
+    </div>
+    <div class="equation" role="img" aria-label="Direct costs plus your pay plus your share of overhead plus profit equals your Profit Price">
+      <div class="eq-term c1"><b>Direct costs</b><span>Materials, components, firing, packaging, fees</span></div>
+      <span class="op" aria-hidden="true">+</span>
+      <div class="eq-term c2"><b>Your pay</b><span>Hours × the hourly rate you choose</span></div>
+      <span class="op" aria-hidden="true">+</span>
+      <div class="eq-term c3"><b>Overhead</b><span>Studio, software, insurance, split across your pieces</span></div>
+      <span class="op" aria-hidden="true">+</span>
+      <div class="eq-term c4"><b>Profit</b><span>Money for the business to grow</span></div>
+      <span class="op" aria-hidden="true">=</span>
+      <div class="eq-term total"><b>Profit Price</b><span>The price that pays you and the business</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== WHAT YOU'LL DO ========== -->
+<section class="band" aria-labelledby="pae-steps-h">
+  <div class="inner">
+    <div class="head">
+      <p class="eyebrow">What you'll do</p>
+      <h2 id="pae-steps-h">Eight steps from "I think it's fine" to knowing for sure</h2>
+      <p class="lede">You work through the course with the Profitable Artist Equation calculator open beside you. Each lesson fills in one part of it.</p>
+    </div>
+    <ol class="steps">
+      <li><span class="badge" aria-hidden="true">1</span><div><h3>The income you'd love</h3><p>Start with why. Work out how much of your life your art should pay for each month.</p></div></li>
+      <li><span class="badge" aria-hidden="true">2</span><div><h3>Your business expenses</h3><p>List every monthly and yearly cost once, so nothing gets missed again. Includes home studio guidance.</p></div></li>
+      <li><span class="badge" aria-hidden="true">3</span><div><h3>Your rate and your time</h3><p>Choose your hourly rate and profit margin, and be honest about the studio hours you really have.</p></div></li>
+      <li><span class="badge" aria-hidden="true">4</span><div><h3>Your pieces</h3><p>Add up to 12 pieces with their price, costs and time. Estimates are fine to start.</p></div></li>
+      <li><span class="badge" aria-hidden="true">5</span><div><h3>What each piece contributes</h3><p>See what every piece adds to your month, and how many of each you can make.</p></div></li>
+      <li><span class="badge" aria-hidden="true">6</span><div><h3>Goal check</h3><p>Find out which pieces can reach your income goal, and the price each one needs.</p></div></li>
+      <li><span class="badge" aria-hidden="true">7</span><div><h3>Your monthly mix</h3><p>Plan the mix of pieces that fits your hours and reaches your goal.</p></div></li>
+      <li><span class="badge" aria-hidden="true">8</span><div><h3>A plan to sell what you make</h3><p>Turn your numbers into a marketing plan, so you sell the mix you've planned.</p></div></li>
+    </ol>
+  </div>
+</section>
+
+<!-- ========== VERDICTS ========== -->
+<section class="band paper" aria-labelledby="pae-v-h">
+  <div class="inner">
+    <div class="head">
+      <p class="eyebrow">Every piece gets a verdict</p>
+      <h2 id="pae-v-h">You'll know exactly what to do with each piece</h2>
+      <p class="lede">The calculator sorts your work into three groups, so you stop guessing and start deciding.</p>
+    </div>
+    <div class="verdicts">
+      <div class="verdict">
+        <span class="pill keeper">Keeper</span>
+        <p>After costs and overhead, this piece earns at least the hourly rate you want. Make more of it.</p>
+        <p class="ex">Example: earns $38/hr against a $35 goal</p>
+      </div>
+      <div class="verdict">
+        <span class="pill raise">Raise the price</span>
+        <p>It earns 60–99% of your rate. A price increase or a faster process will probably fix it.</p>
+        <p class="ex">Example: earns $27/hr against a $35 goal</p>
+      </div>
+      <div class="verdict">
+        <span class="pill rethink">Rethink this piece</span>
+        <p>It earns less than 60% of your rate. Raise the price a lot, make it faster, or keep it as a "love it" piece, not a "money" piece.</p>
+        <p class="ex">Example: earns $14/hr against a $35 goal</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== INSIDE ========== -->
+<section class="band" aria-labelledby="pae-in-h">
+  <div class="inner">
+    <div class="head">
+      <p class="eyebrow">What's inside</p>
+      <h2 id="pae-in-h">Everything you need to price with confidence</h2>
+    </div>
+    <div class="inside">
+      <div class="item">
+        <span class="tag">Course</span>
+        <h3>The video lessons</h3>
+        <p><span class="ph">[NUMBER]</span> short lessons that walk you through each step with real examples from glass, clay, metal and paint. <span class="ph">[ADD LENGTH / FORMAT]</span></p>
+      </div>
+      <div class="item">
+        <span class="tag">Tool</span>
+        <h3>The Profitable Artist Equation calculator</h3>
+        <p>Your private pricing calculator. Type in your numbers and it does the maths: Profit Price, verdicts, goal check and monthly mix. Takes about 30 minutes.</p>
+      </div>
+      <div class="item">
+        <span class="tag">Community</span>
+        <h3>The student community</h3>
+        <p>Ask questions, share your numbers and get feedback from Michelle and other working artists. <span class="ph">[ADD LIVE CALLS IF ANY]</span></p>
+      </div>
+      <div class="item">
+        <span class="tag">Bonus</span>
+        <h3><span class="ph">[BONUS NAME]</span></h3>
+        <p><span class="ph">[What it is and why it helps. For example, a price-increase email template or a market-day pricing sheet.]</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== WHO IT'S FOR ========== -->
+<section class="band paper" aria-labelledby="pae-fit-h">
+  <div class="inner">
+    <div class="head">
+      <p class="eyebrow">Is it right for you?</p>
+      <h2 id="pae-fit-h">Made for makers who are ready to be paid</h2>
+    </div>
+    <div class="fit">
+      <div class="yes">
+        <h3>This is for you if</h3>
+        <ul>
+          <li>You make and sell physical pieces: jewelry, glass, ceramics, metalwork, paintings, prints or similar.</li>
+          <li>You're already selling, even a little, online, at markets or in galleries.</li>
+          <li>You want your art to pay a real wage, not just cover supplies.</li>
+          <li>You're happy to spend an afternoon with your numbers if it means never guessing again.</li>
+        </ul>
+      </div>
+      <div class="no">
+        <h3>This isn't for you if</h3>
+        <ul>
+          <li>You make art purely as a hobby and don't want it to earn.</li>
+          <li>You're looking for tax or accounting advice. This is a planning tool.</li>
+          <li>You want a quick trick to sell more without looking at your costs.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== ABOUT ========== -->
+<section class="band" aria-labelledby="pae-me-h">
+  <div class="inner about">
+    <div class="portrait">[PHOTO OF MICHELLE IN THE STUDIO]</div>
+    <div class="about-copy">
+      <p class="eyebrow">Your teacher</p>
+      <h2 id="pae-me-h">Hi, I'm Michelle Frost</h2>
+      <div class="ph-block">[2–3 short paragraphs: your own art practice and medium, the moment you realised your pricing wasn't paying you, and what changed when you worked out your own equation. End with why you built this course.]</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== PROOF ========== -->
+<section class="band paper" aria-labelledby="pae-proof-h">
+  <div class="inner">
+    <div class="head">
+      <p class="eyebrow">From the studio</p>
+      <h2 id="pae-proof-h">What artists say after they run their numbers</h2>
+    </div>
+    <div class="quotes">
+      <figure class="quote">
+        <p class="result"><span class="ph">[RESULT]</span></p>
+        <blockquote><span class="ph">[TESTIMONIAL 1]</span></blockquote>
+        <figcaption><span class="ph">[NAME, MEDIUM]</span></figcaption>
+      </figure>
+      <figure class="quote">
+        <p class="result"><span class="ph">[RESULT]</span></p>
+        <blockquote><span class="ph">[TESTIMONIAL 2]</span></blockquote>
+        <figcaption><span class="ph">[NAME, MEDIUM]</span></figcaption>
+      </figure>
+      <figure class="quote">
+        <p class="result"><span class="ph">[RESULT]</span></p>
+        <blockquote><span class="ph">[TESTIMONIAL 3]</span></blockquote>
+        <figcaption><span class="ph">[NAME, MEDIUM]</span></figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ========== OFFER ========== -->
+<section class="band" id="pae-enroll" aria-labelledby="pae-offer-h">
+  <div class="inner">
+    <div class="offer">
+      <span class="shape s-sun" aria-hidden="true"></span>
+      <div>
+        <p class="byline">Enrol today</p>
+        <h2 id="pae-offer-h">The Profitable Artist Equation<span class="tm">™</span></h2>
+        <ul class="stack">
+          <li><span>The full video course</span><span class="ph">[VALUE]</span></li>
+          <li><span>The Profitable Artist Equation calculator</span><span class="ph">[VALUE]</span></li>
+          <li><span>The student community</span><span class="ph">[VALUE]</span></li>
+          <li><span class="ph">[BONUS NAME]</span><span class="ph">[VALUE]</span></li>
+        </ul>
+      </div>
+      <div class="buy">
+        <p class="eyebrow">Your investment</p>
+        <p class="price num">$47</p>
+        <p class="plan">One-time payment · <span class="ph">[ACCESS, e.g. lifetime access]</span></p>
+        <!-- CHECKOUT: replace # with your GHL order form step URL -->
+        <a class="btn" href="#" data-checkout>Join the course for $47</a>
+        <div class="guarantee">
+          <span class="seal" aria-hidden="true">✓</span>
+          <p><span class="ph">[GUARANTEE, e.g. Work through the calculator within 30 days. If it doesn't change how you price, email us for a full refund.]</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== FAQ ========== -->
+<section class="band paper" aria-labelledby="pae-faq-h">
+  <div class="inner narrow">
+    <div class="head">
+      <p class="eyebrow">Questions</p>
+      <h2 id="pae-faq-h">Before you join</h2>
+    </div>
+    <div class="faq">
+      <details>
+        <summary>I'm terrible at maths. Can I still do this?</summary>
+        <div class="a"><p>Yes. You type your numbers into the yellow boxes and the calculator does the rest. If you can look up what you paid for supplies, you can do this.</p></div>
+      </details>
+      <details>
+        <summary>Won't raising my prices scare off my customers?</summary>
+        <div class="a"><p>The course helps you see which pieces need a higher price and by how much, so you can raise them with a reason. Some pieces may already be Keepers. Others might be better made faster or kept as "love it" pieces.</p></div>
+      </details>
+      <details>
+        <summary>How long does it take?</summary>
+        <div class="a"><p>The calculator takes about 30 minutes once you have your numbers. <span class="ph">[ADD TOTAL COURSE TIME]</span></p></div>
+      </details>
+      <details>
+        <summary>Does it work for my medium?</summary>
+        <div class="a"><p>If you make physical pieces and sell them, yes. The calculator has fields for materials, components and hardware, firing and energy, packaging, shipping and more, and you can leave out anything you don't use.</p></div>
+      </details>
+      <details>
+        <summary>I only sell a few pieces a year. Is it too early?</summary>
+        <div class="a"><p>This is the best time. Setting your prices properly now means you won't have to fix them later, when you have more customers watching.</p></div>
+      </details>
+      <details>
+        <summary>Is this tax or accounting advice?</summary>
+        <div class="a"><p>No. It's a planning tool that helps you price your work and plan your income. Talk to an accountant about tax.</p></div>
+      </details>
+      <details>
+        <summary>How do I get access?</summary>
+        <div class="a"><p>After you join, you'll get an email with your course login and the password for the calculator. <span class="ph">[CONFIRM ACCESS STEPS]</span></p></div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ========== CLOSE ========== -->
+<section class="band" aria-labelledby="pae-close-h">
+  <div class="inner narrow close">
+    <h2 id="pae-close-h">You've done the hard part. You make beautiful things.</h2>
+    <p class="lede">Now make sure they pay you. Learn the equation once and use it on every piece you make from now on.</p>
+    <a class="btn" href="#pae-enroll">Join the course</a>
+  </div>
+</section>
+
+<footer>© Michelle Frost · The Profitable Artist Equation™ is a planning tool, not tax or accounting advice.</footer>
+
+<script>
+(function () {
+  const FEE = 0.065;
+  const $ = (id) => document.getElementById(id);
+  const ids = ["pae-pc-price", "pae-pc-costs", "pae-pc-hours", "pae-pc-rate"];
+  const money = (n) => "$" + n.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const round5 = (n) => Math.ceil(n / 5) * 5;
+  const num = (id) => { const v = parseFloat(String($(id).value).replace(/[^0-9.]/g, "")); return isFinite(v) ? v : 0; };
+
+  function update() {
+    const price = num("pae-pc-price"), costs = num("pae-pc-costs"), hours = num("pae-pc-hours"), rate = num("pae-pc-rate");
+    const pill = $("pae-pc-verdict"), wageEl = $("pae-pc-wage"), msg = $("pae-pc-msg");
+    if (hours <= 0 || rate <= 0) {
+      wageEl.textContent = "—";
+      pill.hidden = true;
+      msg.textContent = "Add the hours it takes and the rate you want.";
+      return;
+    }
+    const left = price * (1 - FEE) - costs;
+    const wage = left / hours;
+    const ratio = wage / rate;
+    const target = (costs + rate * hours) / (1 - FEE);
+    pill.hidden = false;
+    wageEl.textContent = (wage < 0 ? "−" + money(-wage) : money(wage)) + "/hr";
+    if (ratio >= 1) {
+      pill.className = "pill keeper"; pill.textContent = "Keeper";
+      msg.innerHTML = "Nice. Before overhead, this piece pays your rate. The course shows whether it still does once your studio costs are in.";
+    } else {
+      if (ratio >= 0.6) { pill.className = "pill raise"; pill.textContent = "Raise the price"; }
+      else { pill.className = "pill rethink"; pill.textContent = "Rethink this piece"; }
+      msg.innerHTML = "To be a Keeper, it needs to sell for about <strong>$" + round5(target).toLocaleString() + "</strong>.";
+    }
+  }
+  ids.forEach((id) => $(id).addEventListener("input", update));
+  $("pae-pc").addEventListener("submit", (e) => e.preventDefault());
+  update();
+})();
+</script>
+</div>
