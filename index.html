@@ -425,7 +425,7 @@ footer { padding-top: 8px; }
       </div>
       <div>
         <h3>A few terms</h3>
-        <p><strong>Direct costs:</strong> costs that come with each piece you sell (materials, packaging, fees, firing).</p>
+        <p><strong>Direct costs:</strong> costs that come with each piece you sell (materials, packaging, fees, energy).</p>
         <p><strong>Overhead:</strong> costs you pay every month even if you sell nothing. Split across the pieces you can make in a month.</p>
         <p><strong>Pieces per month:</strong> your studio hours divided by the hours one piece takes. Each piece is worked out on its own, as if you made only that piece.</p>
         <p><strong>What's left:</strong> price minus direct costs. This pays your overhead, then pays you.</p>
@@ -559,9 +559,9 @@ footer { padding-top: 8px; }
       { k: "price", label: "Current selling price", pre: "$", wide: true }
     ]},
     { group: "Direct costs per piece", items: [
-      { k: "materials", label: "Materials & supplies", pre: "$", hint: "Glass, clay, metal, paint, etc." },
+      { k: "materials", label: "Materials & supplies", pre: "$", hint: "Clay, glass, fabric, wood, paint, metal, etc." },
       { k: "components", label: "Components & hardware", pre: "$", hint: "Findings, hangers, bails, stands" },
-      { k: "firing", label: "Firing / kiln / energy", pre: "$" },
+      { k: "firing", label: "Energy per piece", pre: "$", hint: "Kiln, oven or electricity, if you track it" },
       { k: "packaging", label: "Packaging & labels", pre: "$" },
       { k: "shipping", label: "Shipping you pay", pre: "$", hint: "Only if not charged to the buyer" },
       { k: "other", label: "Other per-piece costs", pre: "$" },
