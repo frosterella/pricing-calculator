@@ -417,9 +417,6 @@ footer { padding-top: 8px; }
           <option value="$">$ Dollars</option>
           <option value="£">£ Pounds</option>
           <option value="€">€ Euros</option>
-          <option value="kr">kr Kronor / Kroner</option>
-          <option value="R">R Rand</option>
-          <option value="₹">₹ Rupees</option>
         </select>
       </label>
       <div class="hdr-actions" id="reset-area"></div>
@@ -650,7 +647,7 @@ footer { padding-top: 8px; }
   // Currency is only a symbol; the maths is the same in any currency. Kept per device, apart from the saved numbers.
   const CUR_KEY = "pae-currency";
   let CUR = "$";
-  try { const c = localStorage.getItem(CUR_KEY); if (c) CUR = c; } catch (e) {}
+  try { const c = localStorage.getItem(CUR_KEY); if (["$", "£", "€"].includes(c)) CUR = c; } catch (e) {}
   const curSym = () => CUR.length > 1 ? CUR + " " : CUR;
   const n = v => { const x = parseFloat(String(v ?? "").replace(/[^0-9.\-]/g, "")); return isFinite(x) ? x : 0; };
   const has = v => String(v ?? "").trim() !== "";
