@@ -6,6 +6,16 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <style>:root{color-scheme:light}body{margin:0;font-family:system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}
+/* ---- info pop-ups ---- */
+.lab { display: flex; align-items: center; gap: 6px; }
+.tip { flex: none; display: inline-grid; place-items: center; width: 20px; height: 20px; padding: 0; border-radius: 50%; border: 1.5px solid var(--teal); background: var(--surface); color: var(--teal); font: 700 12px/1 var(--body); cursor: pointer; vertical-align: middle; margin-left: 4px; text-transform: none; letter-spacing: 0; }
+.tip:hover, .tip[aria-expanded="true"] { background: var(--teal); color: var(--on-accent); }
+.lab .tip { margin-left: 0; }
+#tip-pop { position: fixed; z-index: 50; max-width: min(320px, calc(100vw - 24px)); background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-top: 4px solid var(--teal); border-radius: 12px; padding: 12px 14px; box-shadow: 0 12px 32px rgba(42,35,32,.18); font-size: 15px; line-height: 1.5; text-align: left; text-transform: none; letter-spacing: 0; font-weight: 400; white-space: normal; }
+#tip-pop strong { display: block; margin-bottom: 4px; }
+#tip-pop p { margin: 0; }
+#tip-pop p + p { margin-top: 6px; }
+
 /* ---- course password screen ---- */
 html.locked .wrap { display: none; }
 .gate { min-height: 100vh; display: grid; place-items: center; padding-block: 32px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
@@ -445,14 +455,14 @@ footer { padding-top: 8px; }
       </div>
       <div class="cover">
         <div class="field">
-          <label for="s-cover">How much should your art cover?</label>
+          <div class="lab"><label for="s-cover">How much should your art cover?</label><button type="button" class="tip" data-tip="cover" aria-label="What does this mean?" aria-expanded="false">?</button></div>
           <div class="inbox"><input id="s-cover" inputmode="decimal" data-setting="cover"><span>%</span></div>
           <div class="quick" id="cover-quick">
             <button data-act="cover" data-v="25">25%</button><button data-act="cover" data-v="50">50%</button><button data-act="cover" data-v="75">75%</button><button data-act="cover" data-v="100">100%</button>
           </div>
         </div>
         <div class="field">
-          <label for="s-tax">Set aside for income tax</label>
+          <div class="lab"><label for="s-tax">Set aside for income tax</label><button type="button" class="tip" data-tip="tax" aria-label="What does this mean?" aria-expanded="false">?</button></div>
           <div class="inbox"><input id="s-tax" inputmode="decimal" data-setting="tax"><span>%</span></div>
           <div class="hint">Optional. Bills are paid after tax, so this grosses up your goal. Leave at 0 to match the spreadsheet.</div>
         </div>
@@ -467,7 +477,7 @@ footer { padding-top: 8px; }
       <div>
         <div class="exp-list" id="list-biz"></div>
         <button class="exp-add" data-act="add-exp" data-list="biz">+ Add an expense</button>
-        <div class="total-line"><span>Monthly business overhead</span><strong id="biz-total"></strong></div>
+        <div class="total-line"><span>Monthly business overhead <button type="button" class="tip" data-tip="overhead" aria-label="What does this mean?" aria-expanded="false">?</button></span><strong id="biz-total"></strong></div>
       </div>
       <div class="studio-note">
         <h3>Work from a home studio?</h3>
@@ -489,17 +499,17 @@ footer { padding-top: 8px; }
     <div class="section-head"><span class="step c3" aria-hidden="true">3</span><div class="sh-text"><span class="eyebrow">Step 3</span><h2 id="settings-h">Your rate and your time</h2><p>These apply to every piece. Your studio hours set how many of each piece you can make in a month.</p></div></div>
     <div class="settings">
       <div class="field">
-        <label for="s-rate">Hourly rate you want</label>
+        <div class="lab"><label for="s-rate">Hourly rate you want</label><button type="button" class="tip" data-tip="rate" aria-label="What does this mean?" aria-expanded="false">?</button></div>
         <div class="inbox"><span>$</span><input id="s-rate" inputmode="decimal" data-setting="rate"><span>/hour</span></div>
         <div class="hint">What you'd want to be paid to make this work.</div>
       </div>
       <div class="field">
-        <label for="s-margin">Profit margin on top</label>
+        <div class="lab"><label for="s-margin">Profit margin on top</label><button type="button" class="tip" data-tip="margin" aria-label="What does this mean?" aria-expanded="false">?</button></div>
         <div class="inbox"><input id="s-margin" inputmode="decimal" data-setting="margin"><span>%</span></div>
         <div class="hint">10–20% is common. This builds savings and growth.</div>
       </div>
       <div class="field">
-        <label for="s-hours">Studio hours you can work each week</label>
+        <div class="lab"><label for="s-hours">Studio hours you can work each week</label><button type="button" class="tip" data-tip="hours" aria-label="What does this mean?" aria-expanded="false">?</button></div>
         <div class="inbox"><input id="s-hours" inputmode="decimal" data-setting="hours"><span>hours/week</span></div>
         <div class="hint">Making plus finishing, photos, listing and packing. Be honest about the rest of your life.</div>
       </div>
@@ -559,19 +569,19 @@ footer { padding-top: 8px; }
       { k: "price", label: "Current selling price", pre: "$", wide: true }
     ]},
     { group: "Direct costs per piece", items: [
-      { k: "materials", label: "Materials & supplies", pre: "$", hint: "Clay, glass, fabric, wood, paint, metal, etc." },
-      { k: "components", label: "Components & hardware", pre: "$", hint: "Findings, hangers, bails, stands" },
-      { k: "firing", label: "Energy per piece", pre: "$", hint: "Kiln, oven or electricity, if you track it" },
-      { k: "packaging", label: "Packaging & labels", pre: "$" },
+      { k: "materials", label: "Materials & supplies", pre: "$", hint: "Clay, glass, fabric, wood, paint, metal, etc.", tip: "materials" },
+      { k: "components", label: "Components & hardware", pre: "$", hint: "Findings, hangers, bails, stands", tip: "components" },
+      { k: "firing", label: "Energy per piece", pre: "$", hint: "Kiln, oven or electricity, if you track it", tip: "firing" },
+      { k: "packaging", label: "Packaging & labels", pre: "$", tip: "packaging" },
       { k: "shipping", label: "Shipping you pay", pre: "$", hint: "Only if not charged to the buyer" },
       { k: "other", label: "Other per-piece costs", pre: "$" },
-      { k: "waste", label: "Waste & breakage allowance", post: "%", hint: "% of materials + components" },
-      { k: "feePct", label: "Selling & payment fees", post: "%", hint: "% of price" },
-      { k: "fixedFee", label: "Fixed fee per sale", pre: "$", hint: "Listing or transaction fee" }
+      { k: "waste", label: "Waste & breakage allowance", post: "%", hint: "% of materials + components", tip: "waste" },
+      { k: "feePct", label: "Selling & payment fees", post: "%", hint: "% of price", tip: "feePct" },
+      { k: "fixedFee", label: "Fixed fee per sale", pre: "$", hint: "Listing or transaction fee", tip: "fixedFee" }
     ]},
     { group: "Time per piece", items: [
-      { k: "make", label: "Making time", post: "hours" },
-      { k: "finish", label: "Finishing, photos, listing & packing", post: "hours" }
+      { k: "make", label: "Making time", post: "hours", tip: "make" },
+      { k: "finish", label: "Finishing, photos, listing & packing", post: "hours", tip: "finish" }
     ]}
   ];
 
@@ -685,6 +695,37 @@ footer { padding-top: 8px; }
     return { s, rows, live, need, mix };
   }
 
+  // Plain-language help for the "?" buttons. Keep each one short and simple.
+  const TIPS = {
+    cover: ["How much should your art cover?", "Pick how much of your monthly bills you want your art to pay for.", "25% means your art pays one quarter of your bills. 100% means it pays all of them."],
+    tax: ["Income tax", "If you will pay income tax on the money your art makes, add a percent here. Your goal goes up so you still have enough after tax.", "Not sure? Leave it at 0."],
+    overhead: ["Overhead", "Business costs you pay every month, even if you sell nothing. For example: your website, booth and market fees, insurance and ads.", "The calculator shares this cost out across the pieces you make."],
+    rate: ["Hourly rate", "What you want to earn for each hour you work on your art. This is your pay.", "Your profit comes on top of this."],
+    margin: ["Profit margin", "A little extra on top of your costs and your pay. It builds savings and helps your business grow.", "10% to 20% is common."],
+    hours: ["Studio hours", "All the hours you can give your art each week. Count making, cleaning up, photos, listing and packing.", "Be honest about the rest of your life too."],
+    materials: ["Materials & supplies", "What goes into one piece: glass, clay, paint, canvas, fabric, wood and so on.", "Buy in bulk? Take the cost of the whole sheet, roll or bag and divide it by how many pieces you get from it. Example: a $40 roll of canvas makes 8 paintings. $40 ÷ 8 = $5 a piece."],
+    components: ["Components & hardware", "Small parts that go on the piece, like hooks, wire, findings, stands or frames.", "Bought a pack? Divide the pack price by how many parts are in it."],
+    firing: ["Energy per piece", "The power or fuel it takes to make one piece, like a kiln, oven or heat gun.", "Fire, bake or cure several at once? Divide the cost of one full load by the number of pieces in it. Example: a $6 kiln load holds 12 ornaments. $6 ÷ 12 = $0.50 each. Don't track it? Leave it at 0."],
+    packaging: ["Packaging & labels", "Boxes, bags, tissue, tags, labels and cards for one piece."],
+    waste: ["Waste & breakage", "Some pieces break, crack or get spoiled. Add a percent to cover that loss.", "5% to 10% is common. Not sure? Use 0."],
+    feePct: ["Selling & payment fees", "Fees taken from each sale as a percent. For example: Etsy, your card reader, PayPal, or a gallery or consignment shop's cut.", "A flat booth or market fee goes in Step 2 instead."],
+    fixedFee: ["Fixed fee per sale", "A set dollar amount you pay on every sale, like a 20¢ listing fee or a 30¢ card fee."],
+    make: ["Making time", "How long it takes to make one piece. Use parts of an hour: 15 minutes = 0.25, 30 minutes = 0.5.", "Make them in batches? Time the whole batch, then divide by how many pieces it makes. Example: 3 hours for 12 ornaments. 3 ÷ 12 = 0.25 hours each."],
+    finish: ["Finishing time", "Time for everything after making one piece: cleaning, photos, listing online and packing.", "Use parts of an hour: 15 minutes = 0.25."],
+    direct: ["Direct costs", "Everything it costs to make and sell one piece: materials, parts, energy, packaging and fees."],
+    left: ["What's left per sale", "The price minus the direct costs of one piece.", "This money pays your overhead first. What's left after that pays you."],
+    perMonth: ["Pieces you can make per month", "Your studio hours divided by the time one piece takes.", "It's how many you could make if you only made this piece."],
+    perHr: ["Earns per hour, before overhead", "What's left per sale divided by the hours one piece takes. It doesn't take out your overhead yet."],
+    share: ["Share of overhead", "Your monthly overhead split across the pieces you can make. Each piece pays its fair share."],
+    realHr: ["What your time really earns", "What's left after all costs and overhead, divided by your hours.", "This is what you really earn for an hour of work on this piece."],
+    verdict: ["What the verdicts mean", "Keeper: earns your hourly rate or more. Raise the price: earns 60% to 99% of it. Rethink: earns less than 60%.", "Rethink doesn't mean stop. It can be a piece you make because you love it."],
+    pp: ["Profit Price", "The lowest price that covers your costs, pays your hourly rate, pays its share of overhead and adds your profit.", "It's your floor, not your target. If you already charge more and it sells well, keep your price."],
+    contrib: ["Contributes per month", "What's left per sale times how many you can make in a month."],
+    goalPrice: ["Price to reach your goal", "The lowest price that reaches the income you'd love if you spent all your studio hours on this piece."],
+    mix: ["How many this month", "Type how many of each piece you plan to make this month. The calculator adds up your time and money."]
+  };
+  const tip = k => `<button type="button" class="tip" data-tip="${k}" aria-label="What does ${esc(TIPS[k][0])} mean?" aria-expanded="false">?</button>`;
+
   const VERDICT = { keeper: "Keeper", raise: "Raise the price", rethink: "Rethink this piece" };
   const VERDICT_NOTE = {
     keeper: "After costs and overhead, this piece earns at least your hourly rate.",
@@ -728,7 +769,7 @@ footer { padding-top: 8px; }
         <div class="group-grid">
           ${g.items.map(f => `
             <div class="field${f.wide ? " wide" : ""}">
-              <label for="f-${f.k}">${f.label}</label>
+              <div class="lab"><label for="f-${f.k}">${f.label}</label>${f.tip ? tip(f.tip) : ""}</div>
               <div class="inbox">${f.pre ? `<span>${f.pre}</span>` : ""}<input id="f-${f.k}" data-field="${f.k}" ${f.type === "text" ? 'type="text" maxlength="60"' : 'inputmode="decimal"'} value="${esc(p[f.k] ?? "")}">${f.post ? `<span>${f.post}</span>` : ""}</div>
               ${f.hint ? `<div class="hint">${f.hint}</div>` : ""}
             </div>`).join("")}
@@ -776,7 +817,7 @@ footer { padding-top: 8px; }
     const t60 = rate * 0.6 / scaleMax * 100, t100 = rate / scaleMax * 100;
     $("results").innerHTML = `
       <div class="verdict-card ${r.verdict}">
-        <h3>Verdict</h3>
+        <h3>Verdict ${tip("verdict")}</h3>
         <div class="v">${VERDICT[r.verdict]}</div>
         <p>Your time really earns <strong class="num">${money(r.realHr)}/hour</strong> on this piece after costs and overhead. ${VERDICT_NOTE[r.verdict]}</p>
         <div class="meter" aria-hidden="true">
@@ -786,19 +827,19 @@ footer { padding-top: 8px; }
         </div>
       </div>
       <div class="pp">
-        <div class="label">Your Profit Price</div>
+        <div class="label">Your Profit Price ${tip("pp")}</div>
         ${r.ppValid ? `<div class="big num">${money(r.pp)}</div>
         <div class="diff num">${Math.abs(r.diff) < 0.005 ? "Same as your current price" : r.diff > 0 ? `Raise by ${money(r.diff)} from your current ${money(r.price)}` : `<strong class="pos">You're already ${money(-r.diff)} above it.</strong> Your current ${money(r.price)} more than covers everything.`}</div>` :
         `<p>Your fees plus profit margin add up to 100% or more, so no price can cover them. Lower one of them.</p>`}
       </div>
       <dl class="rows">
-        <div><dt>Total direct costs per piece</dt><dd>${money(r.direct)}</dd></div>
-        <div><dt>What's left after direct costs</dt><dd class="${r.left < 0 ? "neg" : ""}">${money(r.left)} <span style="color:var(--muted);font-weight:400">(${pct(r.leftPct)})</span></dd></div>
+        <div><dt>Total direct costs per piece ${tip("direct")}</dt><dd>${money(r.direct)}</dd></div>
+        <div><dt>What's left after direct costs ${tip("left")}</dt><dd class="${r.left < 0 ? "neg" : ""}">${money(r.left)} <span style="color:var(--muted);font-weight:400">(${pct(r.leftPct)})</span></dd></div>
         <div><dt>Total hours per piece</dt><dd>${hrs(r.hours)}</dd></div>
-        <div><dt>Pieces you can make per month</dt><dd>${r.perMonth ? r.perMonth.toLocaleString() : "—"}</dd></div>
-        <div><dt>Time earns per hour, before overhead</dt><dd>${money(r.perHr)}</dd></div>
-        <div><dt>This piece's share of overhead${c.s.overhead > 0 ? "" : ' <span style="font-size:12px">(add in Step 2)</span>'}</dt><dd>${money(r.share)}</dd></div>
-        <div class="strong"><dt>Time REALLY earns per hour</dt><dd class="${r.realHr < 0 ? "neg" : ""}">${money(r.realHr)}</dd></div>
+        <div><dt>Pieces you can make per month ${tip("perMonth")}</dt><dd>${r.perMonth ? r.perMonth.toLocaleString() : "—"}</dd></div>
+        <div><dt>Time earns per hour, before overhead ${tip("perHr")}</dt><dd>${money(r.perHr)}</dd></div>
+        <div><dt>This piece's share of overhead ${tip("share")}${c.s.overhead > 0 ? "" : ' <span style="font-size:12px">(add in Step 2)</span>'}</dt><dd>${money(r.share)}</dd></div>
+        <div class="strong"><dt>Time REALLY earns per hour ${tip("realHr")}</dt><dd class="${r.realHr < 0 ? "neg" : ""}">${money(r.realHr)}</dd></div>
         ${r.ppValid ? `<div><dt>What's left at your Profit Price</dt><dd>${money(r.leftAtPP)}</dd></div>` : ""}
       </dl>`;
   }
@@ -808,14 +849,14 @@ footer { padding-top: 8px; }
     if (!el) return;
     const r = c.rows[state.selected];
     const hours = n(current().make) + n(current().finish);
-    el.innerHTML = !hours ? `<h3>Pieces you can make per month</h3><p>Add the making and finishing time above to work this out.</p>`
-      : !c.s.hoursWeek ? `<h3>Pieces you can make per month</h3><p>Add your studio hours in <a href="#settings-h">Step 3</a> to work this out.</p>`
-      : `<h3>Pieces you can make per month</h3><div class="made-num">${Math.floor(c.s.hoursMonth / hours + 1e-9).toLocaleString()}</div><p>${hrs(c.s.hoursWeek)} a week of studio time is about ${hrs(c.s.hoursMonth)} a month, ÷ ${hrs(hours)} per piece. We assume you sell what you make.</p>`;
+    el.innerHTML = !hours ? `<h3>Pieces you can make per month ${tip("perMonth")}</h3><p>Add the making and finishing time above to work this out.</p>`
+      : !c.s.hoursWeek ? `<h3>Pieces you can make per month ${tip("perMonth")}</h3><p>Add your studio hours in <a href="#settings-h">Step 3</a> to work this out.</p>`
+      : `<h3>Pieces you can make per month ${tip("perMonth")}</h3><div class="made-num">${Math.floor(c.s.hoursMonth / hours + 1e-9).toLocaleString()}</div><p>${hrs(c.s.hoursWeek)} a week of studio time is about ${hrs(c.s.hoursMonth)} a month, ÷ ${hrs(hours)} per piece. We assume you sell what you make.</p>`;
   }
 
   function renderCompare(c) {
     $("compare").innerHTML = `
-      <thead><tr><th>Piece</th><th>Price</th><th>Hours each</th><th>Made /month</th><th>Left per sale</th><th>Contributes /month</th><th>Real $/hour</th><th>Profit Price</th><th>Change</th><th>Verdict</th></tr></thead>
+      <thead><tr><th>Piece</th><th>Price</th><th>Hours each</th><th>Made /month</th><th>Left per sale ${tip("left")}</th><th>Contributes /month ${tip("contrib")}</th><th>Real $/hour ${tip("realHr")}</th><th>Profit Price ${tip("pp")}</th><th>Change</th><th>Verdict</th></tr></thead>
       <tbody>${c.rows.map((r, i) => r.empty
         ? `<tr class="clickable" data-select="${i}"><td>${esc(r.p.name || "Untitled piece")}</td><td colspan="9" style="text-align:left;color:var(--muted)">Add a price to include this piece</td></tr>`
         : `<tr class="clickable" data-select="${i}">
@@ -853,7 +894,7 @@ footer { padding-top: 8px; }
         <dl class="rows">
           <div><dt>Toward your income at ${money(r.price)}</dt><dd class="${r.towardNow < 0 ? "neg" : ""}">${money(r.towardNow, 0)}</dd></div>
           ${ppLine}
-          <div class="strong"><dt>Price to reach your goal</dt><dd>${goalPrice}</dd></div>
+          <div class="strong"><dt>Price to reach your goal ${tip("goalPrice")}</dt><dd>${goalPrice}</dd></div>
         </dl>
       </div>`;
     }).join("");
@@ -873,7 +914,7 @@ footer { padding-top: 8px; }
   }
   function renderMix() {
     $("mix-table").innerHTML = `
-      <thead><tr><th>Piece</th><th>Hours each</th><th>How many this month</th><th>Hours</th><th>Left after costs</th></tr></thead>
+      <thead><tr><th>Piece</th><th>Hours each</th><th>How many this month ${tip("mix")}</th><th>Hours</th><th>Left after costs</th></tr></thead>
       <tbody>${state.pieces.map((p, i) => `
         <tr>
           <td><strong id="mix-name-${p.id}"></strong></td>
@@ -942,7 +983,34 @@ footer { padding-top: 8px; }
 
   function renderAll() { renderSettings(); renderList("biz"); renderList("personal"); renderForm(); renderMix(); renderOutputs(); renderReset(); }
 
+  // One pop-up, reused by every "?" button.
+  const pop = document.createElement("div");
+  pop.id = "tip-pop"; pop.setAttribute("role", "dialog"); pop.hidden = true;
+  document.body.appendChild(pop);
+  let tipBtn = null;
+  function closeTip() {
+    if (tipBtn) tipBtn.setAttribute("aria-expanded", "false");
+    pop.hidden = true; tipBtn = null;
+  }
+  function openTip(btn) {
+    const t = TIPS[btn.dataset.tip];
+    if (!t) return;
+    closeTip();
+    pop.innerHTML = `<strong>${esc(t[0])}</strong>` + t.slice(1).map(x => `<p>${esc(x)}</p>`).join("");
+    pop.setAttribute("aria-label", t[0]);
+    pop.hidden = false; tipBtn = btn; btn.setAttribute("aria-expanded", "true");
+    const b = btn.getBoundingClientRect(), w = pop.offsetWidth, h = pop.offsetHeight, m = 12;
+    const left = Math.max(m, Math.min(b.left + b.width / 2 - w / 2, window.innerWidth - w - m));
+    const below = b.bottom + 8;
+    const top = below + h + m > window.innerHeight && b.top - h - 8 > m ? b.top - h - 8 : below;
+    pop.style.left = left + "px"; pop.style.top = top + "px";
+  }
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && tipBtn) { const b = tipBtn; closeTip(); b.focus(); } });
+  window.addEventListener("scroll", closeTip, { passive: true });
+  window.addEventListener("resize", closeTip);
+
   document.addEventListener("input", e => {
+    closeTip();
     const t = e.target;
     if (t.dataset.setting) { state.settings[t.dataset.setting] = t.value; }
     else if (t.dataset.field) { current()[t.dataset.field] = t.value; }
@@ -953,6 +1021,9 @@ footer { padding-top: 8px; }
   });
 
   document.addEventListener("click", e => {
+    const tb = e.target.closest("[data-tip]");
+    if (tb) { e.stopPropagation(); tb === tipBtn ? closeTip() : openTip(tb); return; }
+    if (tipBtn && !pop.contains(e.target)) closeTip();
     const sel = e.target.closest("[data-select]");
     if (sel) {
       state.selected = +sel.dataset.select; save();
