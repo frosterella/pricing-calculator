@@ -6,6 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <style>:root{color-scheme:light}body{margin:0;font-family:system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}
+/* ---- currency picker ---- */
+.cur-pick { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--mast-ink); }
+.cur-pick select { font: inherit; font-weight: 600; background: var(--mast-ink); color: var(--mast); border: 0; border-radius: 999px; padding: 7px 12px; cursor: pointer; }
+
 /* ---- info pop-ups ---- */
 .lab { display: flex; align-items: center; gap: 6px; }
 .tip { flex: none; display: inline-grid; place-items: center; width: 20px; height: 20px; padding: 0; border-radius: 50%; border: 1.5px solid var(--teal); background: var(--surface); color: var(--teal); font: 700 12px/1 var(--body); cursor: pointer; vertical-align: middle; margin-left: 4px; text-transform: none; letter-spacing: 0; }
@@ -407,7 +411,19 @@ footer { padding-top: 8px; }
       <h1>The Profitable Artist Equation<sup class="tm">™</sup></h1>
       <p class="lede">Find out what each of your pieces really earns you, what you should be charging, and whether your goal fits the hours you have. Type in the yellow boxes. Everything else calculates for you.</p>
     </div>
-    <div class="hdr-actions" id="reset-area"></div>
+    <div class="hdr-actions">
+      <label class="cur-pick" for="currency">Currency
+        <select id="currency">
+          <option value="$">$ Dollars</option>
+          <option value="£">£ Pounds</option>
+          <option value="€">€ Euros</option>
+          <option value="kr">kr Kronor / Kroner</option>
+          <option value="R">R Rand</option>
+          <option value="₹">₹ Rupees</option>
+        </select>
+      </label>
+      <div class="hdr-actions" id="reset-area"></div>
+    </div>
   </header>
 
   <details class="guide" id="guide">
@@ -500,7 +516,7 @@ footer { padding-top: 8px; }
     <div class="settings">
       <div class="field">
         <div class="lab"><label for="s-rate">Hourly rate you want</label><button type="button" class="tip" data-tip="rate" aria-label="What does this mean?" aria-expanded="false">?</button></div>
-        <div class="inbox"><span>$</span><input id="s-rate" inputmode="decimal" data-setting="rate"><span>/hour</span></div>
+        <div class="inbox"><span class="cur">$</span><input id="s-rate" inputmode="decimal" data-setting="rate"><span>/hour</span></div>
         <div class="hint">What you'd want to be paid to make this work.</div>
       </div>
       <div class="field">
@@ -631,9 +647,14 @@ footer { padding-top: 8px; }
   let state = load();
   function save() { try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {} }
 
-  const n = v => { const x = parseFloat(String(v ?? "").replace(/[$,%\s]/g, "")); return isFinite(x) ? x : 0; };
+  // Currency is only a symbol; the maths is the same in any currency. Kept per device, apart from the saved numbers.
+  const CUR_KEY = "pae-currency";
+  let CUR = "$";
+  try { const c = localStorage.getItem(CUR_KEY); if (c) CUR = c; } catch (e) {}
+  const curSym = () => CUR.length > 1 ? CUR + " " : CUR;
+  const n = v => { const x = parseFloat(String(v ?? "").replace(/[^0-9.\-]/g, "")); return isFinite(x) ? x : 0; };
   const has = v => String(v ?? "").trim() !== "";
-  const money = (v, dp = 2) => (v < 0 ? "−$" : "$") + Math.abs(v).toLocaleString("en-US", { minimumFractionDigits: dp, maximumFractionDigits: dp });
+  const money = (v, dp = 2) => (v < 0 ? "−" : "") + curSym() + Math.abs(v).toLocaleString("en-US", { minimumFractionDigits: dp, maximumFractionDigits: dp });
   const signed = v => (v > 0 ? "+" : "") + money(v);
   const pct = v => (v * 100).toFixed(0) + "%";
   const hrs = v => (Math.round(v * 10) / 10).toLocaleString("en-US") + " h";
@@ -752,7 +773,7 @@ footer { padding-top: 8px; }
     $("list-" + key).innerHTML = state[key].map((e, i) => `
       <div class="exp-row">
         <div class="inbox nm"><input id="${key}-${e.id}-name" type="text" maxlength="50" aria-label="Expense name" placeholder="${placeholder}" data-list="${key}" data-i="${i}" data-k="name" value="${esc(e.name ?? "")}"></div>
-        <div class="inbox"><span>$</span><input id="${key}-${e.id}-amt" inputmode="decimal" aria-label="Amount for ${esc(e.name || "this expense")}" data-list="${key}" data-i="${i}" data-k="amount" value="${esc(e.amount ?? "")}"></div>
+        <div class="inbox"><span class="cur">${CUR}</span><input id="${key}-${e.id}-amt" inputmode="decimal" aria-label="Amount for ${esc(e.name || "this expense")}" data-list="${key}" data-i="${i}" data-k="amount" value="${esc(e.amount ?? "")}"></div>
         <select class="per" id="${key}-${e.id}-per" aria-label="How often" data-list="${key}" data-i="${i}" data-k="per">
           ${["week", "month", "year"].map(p => `<option value="${p}"${(e.per || "month") === p ? " selected" : ""}>per ${p}</option>`).join("")}
         </select>
@@ -770,7 +791,7 @@ footer { padding-top: 8px; }
           ${g.items.map(f => `
             <div class="field${f.wide ? " wide" : ""}">
               <div class="lab"><label for="f-${f.k}">${f.label}</label>${f.tip ? tip(f.tip) : ""}</div>
-              <div class="inbox">${f.pre ? `<span>${f.pre}</span>` : ""}<input id="f-${f.k}" data-field="${f.k}" ${f.type === "text" ? 'type="text" maxlength="60"' : 'inputmode="decimal"'} value="${esc(p[f.k] ?? "")}">${f.post ? `<span>${f.post}</span>` : ""}</div>
+              <div class="inbox">${f.pre ? `<span class="cur">${f.pre === "$" ? CUR : f.pre}</span>` : ""}<input id="f-${f.k}" data-field="${f.k}" ${f.type === "text" ? 'type="text" maxlength="60"' : 'inputmode="decimal"'} value="${esc(p[f.k] ?? "")}">${f.post ? `<span>${f.post}</span>` : ""}</div>
               ${f.hint ? `<div class="hint">${f.hint}</div>` : ""}
             </div>`).join("")}
         </div>
@@ -856,7 +877,7 @@ footer { padding-top: 8px; }
 
   function renderCompare(c) {
     $("compare").innerHTML = `
-      <thead><tr><th>Piece</th><th>Price</th><th>Hours each</th><th>Made /month</th><th>Left per sale ${tip("left")}</th><th>Contributes /month ${tip("contrib")}</th><th>Real $/hour ${tip("realHr")}</th><th>Profit Price ${tip("pp")}</th><th>Change</th><th>Verdict</th></tr></thead>
+      <thead><tr><th>Piece</th><th>Price</th><th>Hours each</th><th>Made /month</th><th>Left per sale ${tip("left")}</th><th>Contributes /month ${tip("contrib")}</th><th>Real ${CUR}/hour ${tip("realHr")}</th><th>Profit Price ${tip("pp")}</th><th>Change</th><th>Verdict</th></tr></thead>
       <tbody>${c.rows.map((r, i) => r.empty
         ? `<tr class="clickable" data-select="${i}"><td>${esc(r.p.name || "Untitled piece")}</td><td colspan="9" style="text-align:left;color:var(--muted)">Add a price to include this piece</td></tr>`
         : `<tr class="clickable" data-select="${i}">
@@ -1008,6 +1029,16 @@ footer { padding-top: 8px; }
   document.addEventListener("keydown", e => { if (e.key === "Escape" && tipBtn) { const b = tipBtn; closeTip(); b.focus(); } });
   window.addEventListener("scroll", closeTip, { passive: true });
   window.addEventListener("resize", closeTip);
+
+  const curSel = $("currency");
+  curSel.value = CUR;
+  document.querySelectorAll(".cur").forEach(el => { el.textContent = CUR; });
+  curSel.addEventListener("change", () => {
+    CUR = curSel.value;
+    try { localStorage.setItem(CUR_KEY, CUR); } catch (e) {}
+    document.querySelectorAll(".cur").forEach(el => { el.textContent = CUR; });
+    renderOutputs();
+  });
 
   document.addEventListener("input", e => {
     closeTip();
