@@ -241,6 +241,8 @@ tfoot td { font-weight: 700; border-top: 2px solid var(--ink); border-bottom: 0;
 .pp .big { font-family: var(--display); font-size: 40px; font-weight: 800; line-height: 1; }
 .pp .diff { color: var(--muted); font-size: 14px; }
 .pp.minp { border-width: 1px; border-style: dashed; }
+.res-h { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 18px 0 6px; }
+.res-h:first-child { margin-top: 0; }
 .pp.minp .big { font-size: 30px; }
 .pp.minp.loss { border-color: var(--bad); border-style: solid; }
 
@@ -747,7 +749,7 @@ footer { padding-top: 8px; }
     realHr: ["What your time really earns", "What's left after all costs and overhead, divided by your hours.", "This is what you really earn for an hour of work on this piece."],
     verdict: ["What the verdicts mean", "Keeper: earns your hourly rate or more. Raise the price: earns 60% to 99% of it. Rethink: earns less than 60%.", "Rethink doesn't mean stop. It can be a piece you make because you love it."],
     pp: ["Ideal Price", "The price to aim for. It covers your costs and this piece's share of overhead, pays your hourly rate and adds your profit margin.", "Already charge more and it sells well? Keep your price."],
-    minPrice: ["Minimum Price", "Your break-even price. It covers your direct costs and this piece's share of overhead, with no pay for your time and no profit.", "Below this, every sale loses money. Want to see your true cost? This is it."],
+    minPrice: ["Minimum Price", "Your break-even price. It covers your direct costs and this piece's share of overhead, with no pay for your time and no profit.", "Below this, every sale loses money. Selling fees are a percent of the price, so they're smaller at this lower price."],
     contrib: ["Contributes per month", "What's left per sale times how many you can make in a month."],
     goalPrice: ["Price to reach your goal", "The lowest price that reaches the income you'd love if you spent all your studio hours on this piece."],
     mix: ["How many this month", "Type how many of each piece you plan to make this month. The calculator adds up your time and money."]
@@ -843,7 +845,23 @@ footer { padding-top: 8px; }
     const scaleMax = Math.max(rate * 1.5, r.realHr * 1.05, 1);
     const fillW = Math.max(0, Math.min(100, r.realHr / scaleMax * 100));
     const t60 = rate * 0.6 / scaleMax * 100, t100 = rate / scaleMax * 100;
+    const feesNow = r.price * r.fee + n(r.p.fixedFee);
+    const makeCost = r.direct - feesNow;
+    const feesMin = r.minValid ? r.minPrice * r.fee + n(r.p.fixedFee) : 0;
     $("results").innerHTML = `
+      <h3 class="res-h">At your current price of <span class="num">${money(r.price)}</span></h3>
+      <dl class="rows">
+        <div><dt>Cost to make one piece</dt><dd>${money(makeCost)}</dd></div>
+        <div><dt>Selling fees at this price</dt><dd>${money(feesNow)}</dd></div>
+        <div><dt>Total direct costs per piece ${tip("direct")}</dt><dd>${money(r.direct)}</dd></div>
+        <div><dt>What's left after direct costs ${tip("left")}</dt><dd class="${r.left < 0 ? "neg" : ""}">${money(r.left)} <span style="color:var(--muted);font-weight:400">(${pct(r.leftPct)})</span></dd></div>
+        <div><dt>Total hours per piece</dt><dd>${hrs(r.hours)}</dd></div>
+        <div><dt>Pieces you can make per month ${tip("perMonth")}</dt><dd>${r.perMonth ? r.perMonth.toLocaleString() : "—"}</dd></div>
+        <div><dt>Time earns per hour, before overhead ${tip("perHr")}</dt><dd>${money(r.perHr)}</dd></div>
+        <div><dt>This piece's share of overhead ${tip("share")}${c.s.overhead > 0 ? "" : ' <span style="font-size:12px">(add in Step 2)</span>'}</dt><dd>${money(r.share)}</dd></div>
+        <div class="strong"><dt>Time REALLY earns per hour ${tip("realHr")}</dt><dd class="${r.realHr < 0 ? "neg" : ""}">${money(r.realHr)}</dd></div>
+      </dl>
+      <h3 class="res-h">Your verdict and suggested prices</h3>
       <div class="verdict-card ${r.verdict}">
         <h3>Verdict ${tip("verdict")}</h3>
         <div class="v">${VERDICT[r.verdict]}</div>
@@ -857,24 +875,14 @@ footer { padding-top: 8px; }
       <div class="pp">
         <div class="label">Your Ideal Price ${tip("pp")}</div>
         ${r.ppValid ? `<div class="big num">${money(r.pp)}</div>
-        <div class="diff num">${Math.abs(r.diff) < 0.005 ? "Same as your current price" : r.diff > 0 ? `Raise by ${money(r.diff)} from your current ${money(r.price)}` : `<strong class="pos">You're already ${money(-r.diff)} above it.</strong> Your current ${money(r.price)} more than covers everything.`}</div>` :
+        <div class="diff num">${Math.abs(r.diff) < 0.005 ? "Same as your current price." : r.diff > 0 ? `Raise by ${money(r.diff)} from your current ${money(r.price)}.` : `<strong class="pos">You're already ${money(-r.diff)} above it.</strong> Your current ${money(r.price)} more than covers everything.`} Pays your hourly rate and your profit margin.</div>` :
         `<p>Your fees plus profit margin add up to 100% or more, so no price can cover them. Lower one of them.</p>`}
       </div>
       ${r.minValid ? `<div class="pp minp${r.belowMin ? " loss" : ""}">
         <div class="label">Your Minimum Price ${tip("minPrice")}</div>
         <div class="big num">${money(r.minPrice)}</div>
-        <div class="diff num">${r.belowMin ? `<strong class="neg">This piece loses money on every sale.</strong> Your ${money(r.price)} is ${money(r.minPrice - r.price)} below break-even.` : `Break-even. Your ${money(r.price)} is ${money(r.price - r.minPrice)} above it.`}</div>
-      </div>` : ""}
-      <dl class="rows">
-        <div><dt>Total direct costs per piece ${tip("direct")}</dt><dd>${money(r.direct)}</dd></div>
-        <div><dt>What's left after direct costs ${tip("left")}</dt><dd class="${r.left < 0 ? "neg" : ""}">${money(r.left)} <span style="color:var(--muted);font-weight:400">(${pct(r.leftPct)})</span></dd></div>
-        <div><dt>Total hours per piece</dt><dd>${hrs(r.hours)}</dd></div>
-        <div><dt>Pieces you can make per month ${tip("perMonth")}</dt><dd>${r.perMonth ? r.perMonth.toLocaleString() : "—"}</dd></div>
-        <div><dt>Time earns per hour, before overhead ${tip("perHr")}</dt><dd>${money(r.perHr)}</dd></div>
-        <div><dt>This piece's share of overhead ${tip("share")}${c.s.overhead > 0 ? "" : ' <span style="font-size:12px">(add in Step 2)</span>'}</dt><dd>${money(r.share)}</dd></div>
-        <div class="strong"><dt>Time REALLY earns per hour ${tip("realHr")}</dt><dd class="${r.realHr < 0 ? "neg" : ""}">${money(r.realHr)}</dd></div>
-        ${r.ppValid ? `<div><dt>What's left at your Ideal Price</dt><dd>${money(r.leftAtPP)}</dd></div>` : ""}
-      </dl>`;
+        <div class="diff num">${r.belowMin ? `<strong class="neg">This piece loses money on every sale.</strong> Your ${money(r.price)} is ${money(r.minPrice - r.price)} below break-even.` : `Break-even: covers the ${money(makeCost)} cost to make it, ${money(feesMin)} in selling fees at this price${r.share > 0.005 ? `, and its ${money(r.share)} share of overhead` : ""}. Nothing for your time.`}</div>
+      </div>` : ""}`;
   }
 
   function renderMadeCalc(c) {
