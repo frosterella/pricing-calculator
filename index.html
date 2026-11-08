@@ -243,6 +243,8 @@ tfoot td { font-weight: 700; border-top: 2px solid var(--ink); border-bottom: 0;
 .pp.minp { border-width: 1px; border-style: dashed; }
 .res-h { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 18px 0 6px; }
 .res-h:first-child { margin-top: 0; }
+.ledger .sub { border-top: 2px solid var(--ink, #2A2320); }
+.ledger .note-row dt, .ledger .note-row dd { color: var(--muted); }
 .pp.minp .big { font-size: 30px; }
 .pp.minp.loss { border-color: var(--bad); border-style: solid; }
 
@@ -849,23 +851,23 @@ footer { padding-top: 8px; }
     const makeCost = r.direct - feesNow;
     const feesMin = r.minValid ? r.minPrice * r.fee + n(r.p.fixedFee) : 0;
     $("results").innerHTML = `
-      <h3 class="res-h">At your current price of <span class="num">${money(r.price)}</span></h3>
-      <dl class="rows">
-        <div><dt>Cost to make one piece</dt><dd>${money(makeCost)}</dd></div>
-        <div><dt>Selling fees at this price</dt><dd>${money(feesNow)}</dd></div>
-        <div><dt>Total direct costs per piece ${tip("direct")}</dt><dd>${money(r.direct)}</dd></div>
-        <div><dt>What's left after direct costs ${tip("left")}</dt><dd class="${r.left < 0 ? "neg" : ""}">${money(r.left)} <span style="color:var(--muted);font-weight:400">(${pct(r.leftPct)})</span></dd></div>
-        <div><dt>Total hours per piece</dt><dd>${hrs(r.hours)}</dd></div>
-        <div><dt>Pieces you can make per month ${tip("perMonth")}</dt><dd>${r.perMonth ? r.perMonth.toLocaleString() : "—"}</dd></div>
-        <div><dt>Time earns per hour, before overhead ${tip("perHr")}</dt><dd>${money(r.perHr)}</dd></div>
-        <div><dt>This piece's share of overhead ${tip("share")}${c.s.overhead > 0 ? "" : ' <span style="font-size:12px">(add in Step 2)</span>'}</dt><dd>${money(r.share)}</dd></div>
-        <div class="strong"><dt>Time REALLY earns per hour ${tip("realHr")}</dt><dd class="${r.realHr < 0 ? "neg" : ""}">${money(r.realHr)}</dd></div>
+      <h3 class="res-h">Current pricing</h3>
+      <dl class="rows ledger">
+        <div class="strong"><dt>Selling price</dt><dd>${money(r.price)}</dd></div>
+        <div><dt>− Cost to make one piece</dt><dd>${money(-makeCost)}</dd></div>
+        <div><dt>− Selling fees at this price</dt><dd>${money(-feesNow)}</dd></div>
+        <div class="sub"><dt>= What's left after direct costs ${tip("left")}</dt><dd class="${r.left < 0 ? "neg" : ""}">${money(r.left)}</dd></div>
+        <div class="note-row"><dt>Pieces you can make per month ${tip("perMonth")}</dt><dd>${r.perMonth ? r.perMonth.toLocaleString() : "—"}</dd></div>
+        <div><dt>− This piece's share of overhead ${tip("share")}${c.s.overhead > 0 ? "" : ' <span style="font-size:12px">(add in Step 2)</span>'}</dt><dd>${money(-r.share)}</dd></div>
+        <div class="sub strong"><dt>= Left to pay you for your time</dt><dd class="${r.left - r.share < 0 ? "neg" : ""}">${money(r.left - r.share)}</dd></div>
+        <div><dt>÷ Hours to make one piece</dt><dd>${hrs(r.hours)}</dd></div>
+        <div class="sub strong"><dt>= Your time really earns</dt><dd class="${r.realHr < 0 ? "neg" : ""}">${money(r.realHr)}/hour</dd></div>
       </dl>
       <h3 class="res-h">Your verdict and suggested prices</h3>
       <div class="verdict-card ${r.verdict}">
         <h3>Verdict ${tip("verdict")}</h3>
         <div class="v">${VERDICT[r.verdict]}</div>
-        <p>Your time really earns <strong class="num">${money(r.realHr)}/hour</strong> on this piece after costs and overhead. ${VERDICT_NOTE[r.verdict]}</p>
+        <p>${VERDICT_NOTE[r.verdict]}</p>
         <div class="meter" aria-hidden="true">
           <div class="meter-track"><div class="meter-fill" style="width:${fillW}%"></div>
             <div class="meter-tick" style="left:${t60}%"></div><div class="meter-tick" style="left:${t100}%"></div></div>
