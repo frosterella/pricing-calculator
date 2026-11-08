@@ -444,12 +444,12 @@ footer { padding-top: 8px; }
       <div>
         <h3>How to use it (about an hour)</h3>
         <ol>
-          <li>Start with why: list your personal monthly costs and choose how much of them your art should cover. That's your income goal.</li>
+          <li>Start with why: list your personal monthly costs and choose how much of them your art should cover. That's your monthly income goal.</li>
           <li>List your business expenses, so they're done. Use “per year” for things like insurance. Home studio costs stay in your personal expenses.</li>
           <li>Set your hourly rate, profit margin and the studio hours you really have each week.</li>
           <li>Add your pieces with their price, direct costs and time. Estimates are fine. The calculator works out how many you can make in a month from your studio hours. Want to see how it works first? Choose <strong>Load an example</strong> at the top.</li>
           <li>See what each piece contributes in a month.</li>
-          <li>In Goal check, see which pieces reach the income you'd love, and the price each one needs.</li>
+          <li>In the Monthly income check, see which pieces could cover your monthly income goal on their own.</li>
           <li>Optional: plan a monthly mix of pieces and see whether it fits your studio hours and reaches your goal.</li>
         </ol>
       </div>
@@ -469,7 +469,6 @@ footer { padding-top: 8px; }
         <p><strong>What's left:</strong> price minus direct costs. This pays your overhead, then pays you.</p>
         <p><strong>Minimum Price:</strong> your break-even price. It covers your costs and your share of overhead, with nothing for your time. Below it, every sale loses money.</p>
         <p><strong>Ideal Price:</strong> the price to aim for. It covers your costs and your share of overhead, pays your hourly rate, and adds your profit margin.</p>
-        <p><strong>Price to reach your goal:</strong> the lowest price that reaches the income you'd love if you spend all your studio hours on that piece.</p>
       </div>
     </div>
   </details>
@@ -493,7 +492,7 @@ footer { padding-top: 8px; }
         <div class="field">
           <div class="lab"><label for="s-tax">Set aside for income tax</label><button type="button" class="tip" data-tip="tax" aria-label="What does this mean?" aria-expanded="false">?</button></div>
           <div class="inbox"><input id="s-tax" inputmode="decimal" data-setting="tax"><span>%</span></div>
-          <div class="hint">Optional. Bills are paid after tax, so this grosses up your goal. Leave at 0 to match the spreadsheet.</div>
+          <div class="hint">Optional. Bills are paid after tax, so this grosses up your goal. Not sure? Leave it empty.</div>
         </div>
         <div class="goal-out"><div><div class="math" id="goal-math"></div><div class="big" id="goal-total"></div></div></div>
       </div>
@@ -563,9 +562,9 @@ footer { padding-top: 8px; }
   </section>
 
   <section class="panel" aria-labelledby="goal-h">
-    <div class="section-head"><span class="step c2" aria-hidden="true">6</span><div class="sh-text"><span class="eyebrow">Step 6</span><h2 id="goal-h">Goal check</h2><p id="need"></p></div></div>
+    <div class="section-head"><span class="step c2" aria-hidden="true">6</span><div class="sh-text"><span class="eyebrow">Step 6</span><h2 id="goal-h">Monthly income check</h2><p id="need"></p></div></div>
     <div class="goal-cards" id="goal-cards"></div>
-    <p class="note">Each piece is its own calculation, as if you made and sold only that piece all month. Use it to see which pieces reach the income you'd love, and what price the others need. Want to see a mix of pieces together? Use Step 7. The Ideal Price assumes you sell what you make, so test a new price on your next few sales before you change everything.</p>
+    <p class="note">Each piece is its own calculation, as if you made and sold only that piece all month. Use it to see which pieces could cover your monthly income goal on their own. Want to see a mix of pieces together? Use Step 7. The Ideal Price assumes you sell what you make, so test a new price on your next few sales before you change everything.</p>
   </section>
 
   <section class="panel" aria-labelledby="mix-h">
@@ -739,8 +738,7 @@ footer { padding-top: 8px; }
       const belowMin = minValid && price < minPrice - 0.005;
       const towardNow = left * perMonth - overhead;
       const towardPP = ppValid ? leftAtPP * perMonth - overhead : null;
-      const priceToGoal = perMonth && fee < 1 ? (need / perMonth + costNoPct) / (1 - fee) : null;
-      return { p, price, fee, direct, costNoPct, left, leftPct: price ? left / price : 0, hours, perMonth, perHr, share, realHr, verdict, pp, ppValid, diff: pp - price, minPrice, minValid, belowMin, leftAtPP, towardNow, towardPP, priceToGoal };
+      return { p, price, fee, direct, costNoPct, left, leftPct: price ? left / price : 0, hours, perMonth, perHr, share, realHr, verdict, pp, ppValid, diff: pp - price, minPrice, minValid, belowMin, leftAtPP, towardNow, towardPP };
     });
     const live = rows.filter(r => !r.empty);
     // The mix adds up whatever quantities were planned in Step 7; overhead counts once.
@@ -787,7 +785,6 @@ footer { padding-top: 8px; }
     pp: ["Ideal Price", "The price to aim for. It covers your costs and this piece's share of overhead, pays your hourly rate and adds your profit margin.", "Already charge more and it sells well? Keep your price."],
     minPrice: ["Minimum Price", "Your break-even price. It covers your direct costs and this piece's share of overhead, with no pay for your time and no profit.", "Below this, every sale loses money. Selling fees are a percent of the price, so they're smaller at this lower price."],
     contrib: ["Contributes per month", "What's left per sale times how many you can make in a month."],
-    goalPrice: ["Price to reach your goal", "The lowest price that reaches the income you'd love if you spent all your studio hours on this piece."],
     mix: ["How many this month", "Type how many of each piece you plan to make this month. The calculator adds up your time and money."]
   };
   const tip = k => `<button type="button" class="tip" data-tip="${k}" aria-label="What does ${esc(TIPS[k][0])} mean?" aria-expanded="false">?</button>`;
@@ -905,7 +902,7 @@ footer { padding-top: 8px; }
         <div class="meter" aria-hidden="true">
           <div class="meter-track"><div class="meter-fill" style="width:${fillW}%"></div>
             <div class="meter-tick" style="left:${t60}%"></div><div class="meter-tick" style="left:${t100}%"></div></div>
-          <div class="meter-labels"><span style="left:${t60}%">60%</span><span style="left:${t100}%">${money(rate, 0)} goal</span></div>
+          <div class="meter-labels"><span style="left:${t60}%">60%</span><span style="left:${t100}%">${money(rate, 0)} rate</span></div>
         </div>
       </div>
       <div class="pp">
@@ -951,11 +948,11 @@ footer { padding-top: 8px; }
 
   function renderGoal(c) {
     const s = c.s;
-    $("need").innerHTML = s.goal > 0
-      ? `Each month a piece needs to leave <strong class="num">${money(c.need, 0)}</strong> after its costs: the ${money(s.goal, 0)} income you'd love plus ${money(s.overhead, 0)} business expenses.`
-      : `See which pieces can pay you the income you'd love.`;
+    $("need").innerHTML = (`Steps 4 and 5 priced each piece. This step looks at your whole month instead: could one piece, on its own, cover the monthly income goal you set in Step 1?`) + (s.goal > 0
+      ? ` To do that, it needs to leave <strong class="num">${money(c.need, 0)}</strong> a month after its costs: your ${money(s.goal, 0)} monthly income goal plus ${money(s.overhead, 0)} business expenses.`
+      : "");
     if (s.goal <= 0) {
-      $("goal-cards").innerHTML = `<div class="gcard none"><h4>Fill in Step 1 first</h4><p>Add your personal expenses and choose how much your art should cover. Then this shows which pieces reach that goal.</p></div>`;
+      $("goal-cards").innerHTML = `<div class="gcard none"><h4>Fill in Step 1 first</h4><p>Add your personal expenses and choose how much your art should cover. Then this shows which pieces can cover your monthly income goal.</p></div>`;
       return;
     }
     if (!c.live.length) { $("goal-cards").innerHTML = `<div class="gcard none"><h4>Add a piece with a price</h4></div>`; return; }
@@ -965,15 +962,15 @@ footer { padding-top: 8px; }
       const reaches = r.towardNow >= s.goal - 0.005;
       const short = s.goal - r.towardNow;
       const ppLine = r.ppValid ? `<div><dt>At your Ideal Price of ${money(r.pp)}</dt><dd class="${r.towardPP < 0 ? "neg" : ""}">${money(r.towardPP, 0)}</dd></div>` : "";
-      const goalPrice = r.priceToGoal === null ? "—" : r.priceToGoal <= r.price + 0.005 ? '<span class="pos">You\'re already there</span>' : money(r.priceToGoal);
+      const reachesPP = r.ppValid && r.towardPP >= s.goal - 0.005;
       return `<div class="gcard ${reaches ? "fits" : "over"}">
-        <div class="gcard-top"><h4>${name}</h4><span class="pill ${reaches ? "fits" : "over"}">${reaches ? "Reaches your goal" : money(short, 0) + " short"}</span></div>
+        <div class="gcard-top"><h4>${name}</h4><span class="pill ${reaches ? "fits" : "over"}">${reaches ? "Covers your monthly income goal" : money(short, 0) + " short"}</span></div>
         <p class="sub">If you make only this piece: <strong>${r.perMonth.toLocaleString()} a month</strong> at ${hrs(r.hours)} each.</p>
         <dl class="rows">
-          <div><dt>Toward your income at ${money(r.price)}</dt><dd class="${r.towardNow < 0 ? "neg" : ""}">${money(r.towardNow, 0)}</dd></div>
+          <div><dt>Toward your monthly income at your current ${money(r.price)}</dt><dd class="${r.towardNow < 0 ? "neg" : ""}">${money(r.towardNow, 0)}</dd></div>
           ${ppLine}
-          <div class="strong"><dt>Price to reach your goal ${tip("goalPrice")}</dt><dd>${goalPrice}</dd></div>
         </dl>
+        ${!reaches && !reachesPP && r.ppValid ? `<p class="sub">Even at your Ideal Price, this piece can't cover your monthly income goal in the hours you have. Try a faster process, a higher price, or a mix of pieces in Step 7.</p>` : !reaches && reachesPP ? `<p class="sub">At your Ideal Price, this piece would cover your monthly income goal.</p>` : ""}
       </div>`;
     }).join("");
   }
@@ -1036,9 +1033,9 @@ footer { padding-top: 8px; }
               : `Needs ${hrs(m.hours)}, but you have ${hrs(s.hoursMonth)} of studio time this month. That's ${hrs(m.hours - s.hoursMonth)} too many. Make fewer pieces, choose faster ones, or add studio hours in Step 3.`)
       : `Add your studio hours in Step 3 to check this mix against your time.`;
     const reaches = s.goal > 0 && m.toward >= s.goal - 0.005;
-    const goalLine = s.goal <= 0 ? `Fill in Step 1 to compare this with the income you'd love.`
-      : reaches ? `That reaches the ${money(s.goal, 0)} income you'd love, with ${money(m.toward - s.goal, 0)} to spare.`
-      : `That's ${money(s.goal - m.toward, 0)} short of the ${money(s.goal, 0)} income you'd love.`;
+    const goalLine = s.goal <= 0 ? `Fill in Step 1 to compare this with your monthly income goal.`
+      : reaches ? `That covers your ${money(s.goal, 0)} monthly income goal, with ${money(m.toward - s.goal, 0)} to spare.`
+      : `That's ${money(s.goal - m.toward, 0)} short of your ${money(s.goal, 0)} monthly income goal.`;
     $("mix-summary").innerHTML = `
       <div class="mix-card ${s.hoursMonth > 0 ? (fits ? "fits" : "over") : "none"}">
         <h3>Your time</h3>
@@ -1052,7 +1049,7 @@ footer { padding-top: 8px; }
           <div><dt>Sales this month</dt><dd>${money(m.sales, 0)}</dd></div>
           <div><dt>Left after each piece's costs</dt><dd>${money(m.left, 0)}</dd></div>
           <div><dt>Minus business expenses (Step 2)</dt><dd>${money(-s.overhead, 0)}</dd></div>
-          <div class="strong"><dt>Toward your income</dt><dd class="${m.toward < 0 ? "neg" : ""}">${money(m.toward, 0)}</dd></div>
+          <div class="strong"><dt>Toward your monthly income</dt><dd class="${m.toward < 0 ? "neg" : ""}">${money(m.toward, 0)}</dd></div>
           <div><dt>If you raised prices to your Ideal Prices</dt><dd>${money(m.towardPP, 0)}</dd></div>
         </dl>
         <p>${goalLine}</p>
