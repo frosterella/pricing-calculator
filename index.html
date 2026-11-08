@@ -240,6 +240,9 @@ tfoot td { font-weight: 700; border-top: 2px solid var(--ink); border-bottom: 0;
 .pp .label { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--accent); }
 .pp .big { font-family: var(--display); font-size: 40px; font-weight: 800; line-height: 1; }
 .pp .diff { color: var(--muted); font-size: 14px; }
+.pp.minp { border-width: 1px; border-style: dashed; }
+.pp.minp .big { font-size: 30px; }
+.pp.minp.loss { border-color: var(--bad); border-style: solid; }
 
 .rows { display: grid; margin: 0; }
 .rows > div { display: flex; justify-content: space-between; gap: 12px; padding: 7px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
@@ -453,7 +456,8 @@ footer { padding-top: 8px; }
         <p><strong>Overhead:</strong> costs you pay every month even if you sell nothing. Split across the pieces you can make in a month.</p>
         <p><strong>Pieces per month:</strong> your studio hours divided by the hours one piece takes. Each piece is worked out on its own, as if you made only that piece.</p>
         <p><strong>What's left:</strong> price minus direct costs. This pays your overhead, then pays you.</p>
-        <p><strong>Profit Price:</strong> the price that covers your costs, pays your hourly rate, covers your share of overhead, and adds your profit margin.</p>
+        <p><strong>Minimum Price:</strong> your break-even price. It covers your costs and your share of overhead, with nothing for your time. Below it, every sale loses money.</p>
+        <p><strong>Ideal Price:</strong> the price to aim for. It covers your costs and your share of overhead, pays your hourly rate, and adds your profit margin.</p>
         <p><strong>Price to reach your goal:</strong> the lowest price that reaches the income you'd love if you spend all your studio hours on that piece.</p>
       </div>
     </div>
@@ -515,7 +519,7 @@ footer { padding-top: 8px; }
       <div class="field">
         <div class="lab"><label for="s-rate">Hourly rate you want</label><button type="button" class="tip" data-tip="rate" aria-label="What does this mean?" aria-expanded="false">?</button></div>
         <div class="inbox"><span class="cur">$</span><input id="s-rate" inputmode="decimal" data-setting="rate"><span>/hour</span></div>
-        <div class="hint">What you'd want to be paid to make this work.</div>
+        <div class="hint">Your ideal pay, or what you'd pay someone to make it.</div>
       </div>
       <div class="field">
         <div class="lab"><label for="s-margin">Profit margin on top</label><button type="button" class="tip" data-tip="margin" aria-label="What does this mean?" aria-expanded="false">?</button></div>
@@ -539,7 +543,7 @@ footer { padding-top: 8px; }
         <div class="results" id="results" aria-live="polite"></div>
       </div>
     </div>
-    <p class="note step-note">Each piece's verdict and Profit Price include its share of your business expenses from <a href="#biz-h">Step 2</a>. Change those and these results update.</p>
+    <p class="note step-note">Each piece's verdict, Minimum Price and Ideal Price include its share of your business expenses from <a href="#biz-h">Step 2</a>. Change those and these results update.</p>
   </section>
 
   <section class="panel" aria-labelledby="compare-h">
@@ -550,7 +554,7 @@ footer { padding-top: 8px; }
   <section class="panel" aria-labelledby="goal-h">
     <div class="section-head"><span class="step c2" aria-hidden="true">6</span><div class="sh-text"><span class="eyebrow">Step 6</span><h2 id="goal-h">Goal check</h2><p id="need"></p></div></div>
     <div class="goal-cards" id="goal-cards"></div>
-    <p class="note">Each piece is its own calculation, as if you made and sold only that piece all month. Use it to see which pieces reach the income you'd love, and what price the others need. Want to see a mix of pieces together? Use Step 7. The Profit Price assumes you sell what you make, so test a new price on your next few sales before you change everything.</p>
+    <p class="note">Each piece is its own calculation, as if you made and sold only that piece all month. Use it to see which pieces reach the income you'd love, and what price the others need. Want to see a mix of pieces together? Use Step 7. The Ideal Price assumes you sell what you make, so test a new price on your next few sales before you change everything.</p>
   </section>
 
   <section class="panel" aria-labelledby="mix-h">
@@ -692,10 +696,14 @@ footer { padding-top: 8px; }
       const ppValid = denom > 0;
       const pp = ppValid ? (costNoPct + hours * s.rate + share) / denom : 0;
       const leftAtPP = pp * (1 - fee) - costNoPct;
+      // Minimum Price = break-even: direct costs plus overhead share, with no pay and no profit.
+      const minValid = fee < 1;
+      const minPrice = minValid ? (costNoPct + share) / (1 - fee) : 0;
+      const belowMin = minValid && price < minPrice - 0.005;
       const towardNow = left * perMonth - overhead;
       const towardPP = ppValid ? leftAtPP * perMonth - overhead : null;
       const priceToGoal = perMonth && fee < 1 ? (need / perMonth + costNoPct) / (1 - fee) : null;
-      return { p, price, fee, direct, costNoPct, left, leftPct: price ? left / price : 0, hours, perMonth, perHr, share, realHr, verdict, pp, ppValid, diff: pp - price, leftAtPP, towardNow, towardPP, priceToGoal };
+      return { p, price, fee, direct, costNoPct, left, leftPct: price ? left / price : 0, hours, perMonth, perHr, share, realHr, verdict, pp, ppValid, diff: pp - price, minPrice, minValid, belowMin, leftAtPP, towardNow, towardPP, priceToGoal };
     });
     const live = rows.filter(r => !r.empty);
     // The mix adds up whatever quantities were planned in Step 7; overhead counts once.
@@ -706,7 +714,7 @@ footer { padding-top: 8px; }
       hours: sum(r => q(r) * r.hours),
       sales: sum(r => q(r) * r.price),
       left: sum(r => q(r) * r.left),
-      // Pieces already priced above their Profit Price keep their current price.
+      // Pieces already priced above their Ideal Price keep their current price.
       leftPP: sum(r => q(r) * (r.ppValid && r.pp > r.price ? r.leftAtPP : r.left))
     };
     mix.toward = mix.left - overhead;
@@ -719,7 +727,7 @@ footer { padding-top: 8px; }
     cover: ["How much should your art cover?", "Pick how much of your monthly bills you want your art to pay for.", "25% means your art pays one quarter of your bills. 100% means it pays all of them."],
     tax: ["Income tax", "If you will pay income tax on the money your art makes, add a percent here. Your goal goes up so you still have enough after tax.", "Not sure? Leave it at 0."],
     overhead: ["Overhead", "Business costs you pay every month, even if you sell nothing. For example: your website, booth and market fees, insurance and ads.", "The calculator shares this cost out across the pieces you make."],
-    rate: ["Hourly rate", "What you want to earn for each hour you work on your art. This is your pay.", "Your profit comes on top of this."],
+    rate: ["Hourly rate", "Your ideal hourly pay for making your art. If you have staff, use what you'd pay someone to make the piece.", "Not sure? Start with your local minimum wage. Your profit comes on top of this."],
     margin: ["Profit margin", "A little extra on top of your costs and your pay. It builds savings and helps your business grow.", "10% to 20% is common."],
     hours: ["Studio hours", "All the hours you can give your art each week. Count making, cleaning up, photos, listing and packing.", "Be honest about the rest of your life too."],
     materials: ["Materials & supplies", "What goes into one piece: glass, clay, paint, canvas, fabric, wood and so on.", "Buy in bulk? Take the cost of the whole sheet, roll or bag and divide it by how many pieces you get from it. Example: a $40 roll of canvas makes 8 paintings. $40 ÷ 8 = $5 a piece."],
@@ -738,7 +746,8 @@ footer { padding-top: 8px; }
     share: ["Share of overhead", "Your monthly overhead split across the pieces you can make. Each piece pays its fair share."],
     realHr: ["What your time really earns", "What's left after all costs and overhead, divided by your hours.", "This is what you really earn for an hour of work on this piece."],
     verdict: ["What the verdicts mean", "Keeper: earns your hourly rate or more. Raise the price: earns 60% to 99% of it. Rethink: earns less than 60%.", "Rethink doesn't mean stop. It can be a piece you make because you love it."],
-    pp: ["Profit Price", "The lowest price that covers your costs, pays your hourly rate, pays its share of overhead and adds your profit.", "It's your floor, not your target. If you already charge more and it sells well, keep your price."],
+    pp: ["Ideal Price", "The price to aim for. It covers your costs and this piece's share of overhead, pays your hourly rate and adds your profit margin.", "Already charge more and it sells well? Keep your price."],
+    minPrice: ["Minimum Price", "Your break-even price. It covers your direct costs and this piece's share of overhead, with no pay for your time and no profit.", "Below this, every sale loses money. Want to see your true cost? This is it."],
     contrib: ["Contributes per month", "What's left per sale times how many you can make in a month."],
     goalPrice: ["Price to reach your goal", "The lowest price that reaches the income you'd love if you spent all your studio hours on this piece."],
     mix: ["How many this month", "Type how many of each piece you plan to make this month. The calculator adds up your time and money."]
@@ -846,11 +855,16 @@ footer { padding-top: 8px; }
         </div>
       </div>
       <div class="pp">
-        <div class="label">Your Profit Price ${tip("pp")}</div>
+        <div class="label">Your Ideal Price ${tip("pp")}</div>
         ${r.ppValid ? `<div class="big num">${money(r.pp)}</div>
         <div class="diff num">${Math.abs(r.diff) < 0.005 ? "Same as your current price" : r.diff > 0 ? `Raise by ${money(r.diff)} from your current ${money(r.price)}` : `<strong class="pos">You're already ${money(-r.diff)} above it.</strong> Your current ${money(r.price)} more than covers everything.`}</div>` :
         `<p>Your fees plus profit margin add up to 100% or more, so no price can cover them. Lower one of them.</p>`}
       </div>
+      ${r.minValid ? `<div class="pp minp${r.belowMin ? " loss" : ""}">
+        <div class="label">Your Minimum Price ${tip("minPrice")}</div>
+        <div class="big num">${money(r.minPrice)}</div>
+        <div class="diff num">${r.belowMin ? `<strong class="neg">This piece loses money on every sale.</strong> Your ${money(r.price)} is ${money(r.minPrice - r.price)} below break-even.` : `Break-even. Your ${money(r.price)} is ${money(r.price - r.minPrice)} above it.`}</div>
+      </div>` : ""}
       <dl class="rows">
         <div><dt>Total direct costs per piece ${tip("direct")}</dt><dd>${money(r.direct)}</dd></div>
         <div><dt>What's left after direct costs ${tip("left")}</dt><dd class="${r.left < 0 ? "neg" : ""}">${money(r.left)} <span style="color:var(--muted);font-weight:400">(${pct(r.leftPct)})</span></dd></div>
@@ -859,7 +873,7 @@ footer { padding-top: 8px; }
         <div><dt>Time earns per hour, before overhead ${tip("perHr")}</dt><dd>${money(r.perHr)}</dd></div>
         <div><dt>This piece's share of overhead ${tip("share")}${c.s.overhead > 0 ? "" : ' <span style="font-size:12px">(add in Step 2)</span>'}</dt><dd>${money(r.share)}</dd></div>
         <div class="strong"><dt>Time REALLY earns per hour ${tip("realHr")}</dt><dd class="${r.realHr < 0 ? "neg" : ""}">${money(r.realHr)}</dd></div>
-        ${r.ppValid ? `<div><dt>What's left at your Profit Price</dt><dd>${money(r.leftAtPP)}</dd></div>` : ""}
+        ${r.ppValid ? `<div><dt>What's left at your Ideal Price</dt><dd>${money(r.leftAtPP)}</dd></div>` : ""}
       </dl>`;
   }
 
@@ -875,15 +889,16 @@ footer { padding-top: 8px; }
 
   function renderCompare(c) {
     $("compare").innerHTML = `
-      <thead><tr><th>Piece</th><th>Price</th><th>Hours each</th><th>Made /month</th><th>Left per sale ${tip("left")}</th><th>Contributes /month ${tip("contrib")}</th><th>Real ${CUR}/hour ${tip("realHr")}</th><th>Profit Price ${tip("pp")}</th><th>Change</th><th>Verdict</th></tr></thead>
+      <thead><tr><th>Piece</th><th>Price</th><th>Hours each</th><th>Made /month</th><th>Left per sale ${tip("left")}</th><th>Contributes /month ${tip("contrib")}</th><th>Real ${CUR}/hour ${tip("realHr")}</th><th>Minimum Price ${tip("minPrice")}</th><th>Ideal Price ${tip("pp")}</th><th>Change</th><th>Verdict</th></tr></thead>
       <tbody>${c.rows.map((r, i) => r.empty
-        ? `<tr class="clickable" data-select="${i}"><td>${esc(r.p.name || "Untitled piece")}</td><td colspan="9" style="text-align:left;color:var(--muted)">Add a price to include this piece</td></tr>`
+        ? `<tr class="clickable" data-select="${i}"><td>${esc(r.p.name || "Untitled piece")}</td><td colspan="10" style="text-align:left;color:var(--muted)">Add a price to include this piece</td></tr>`
         : `<tr class="clickable" data-select="${i}">
             <td><strong>${esc(r.p.name || "Untitled piece")}</strong></td>
             <td>${money(r.price)}</td><td>${hrs(r.hours)}</td><td>${r.perMonth ? r.perMonth.toLocaleString() : "—"}</td>
             <td class="${r.left < 0 ? "neg" : ""}">${money(r.left)}</td>
             <td class="${r.left < 0 ? "neg" : ""}"><strong>${money(r.left * r.perMonth)}</strong></td>
             <td class="${r.realHr < 0 ? "neg" : ""}">${money(r.realHr)}</td>
+            <td class="${r.belowMin ? "neg" : ""}">${r.minValid ? money(r.minPrice) : "—"}</td>
             <td><strong>${r.ppValid ? money(r.pp) : "—"}</strong></td>
             <td class="${r.diff < -0.005 ? "pos" : ""}">${!r.ppValid ? "—" : r.diff > 0.005 ? "+" + money(r.diff) : r.diff < -0.005 ? money(-r.diff) + " above" : "On target"}</td>
             <td><span class="pill ${r.verdict}">${VERDICT[r.verdict]}</span></td>
@@ -905,7 +920,7 @@ footer { padding-top: 8px; }
       if (!r.perMonth) return `<div class="gcard none"><h4>${name}</h4><p>Add its making time in Step 4 and your studio hours in Step 3 to see this.</p></div>`;
       const reaches = r.towardNow >= s.goal - 0.005;
       const short = s.goal - r.towardNow;
-      const ppLine = r.ppValid ? `<div><dt>At your Profit Price of ${money(r.pp)}</dt><dd class="${r.towardPP < 0 ? "neg" : ""}">${money(r.towardPP, 0)}</dd></div>` : "";
+      const ppLine = r.ppValid ? `<div><dt>At your Ideal Price of ${money(r.pp)}</dt><dd class="${r.towardPP < 0 ? "neg" : ""}">${money(r.towardPP, 0)}</dd></div>` : "";
       const goalPrice = r.priceToGoal === null ? "—" : r.priceToGoal <= r.price + 0.005 ? '<span class="pos">You\'re already there</span>' : money(r.priceToGoal);
       return `<div class="gcard ${reaches ? "fits" : "over"}">
         <div class="gcard-top"><h4>${name}</h4><span class="pill ${reaches ? "fits" : "over"}">${reaches ? "Reaches your goal" : money(short, 0) + " short"}</span></div>
@@ -994,7 +1009,7 @@ footer { padding-top: 8px; }
           <div><dt>Left after each piece's costs</dt><dd>${money(m.left, 0)}</dd></div>
           <div><dt>Minus business expenses (Step 2)</dt><dd>${money(-s.overhead, 0)}</dd></div>
           <div class="strong"><dt>Toward your income</dt><dd class="${m.toward < 0 ? "neg" : ""}">${money(m.toward, 0)}</dd></div>
-          <div><dt>If you raised prices to your Profit Prices</dt><dd>${money(m.towardPP, 0)}</dd></div>
+          <div><dt>If you raised prices to your Ideal Prices</dt><dd>${money(m.towardPP, 0)}</dd></div>
         </dl>
         <p>${goalLine}</p>
       </div>`;
