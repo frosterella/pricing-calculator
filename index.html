@@ -427,6 +427,13 @@ footer { padding-top: 8px; }
           <option value="€">€ Euros</option>
         </select>
       </label>
+      <label class="cur-pick" for="example-pick">Example
+        <select id="example-pick">
+          <option value="">Load an example…</option>
+          <option value="ornament">Ornament</option>
+          <option value="painting">Painting</option>
+        </select>
+      </label>
       <div class="hdr-actions" id="reset-area"></div>
     </div>
   </header>
@@ -440,7 +447,7 @@ footer { padding-top: 8px; }
           <li>Start with why: list your personal monthly costs and choose how much of them your art should cover. That's your income goal.</li>
           <li>List your business expenses, so they're done. Use “per year” for things like insurance. Home studio costs stay in your personal expenses.</li>
           <li>Set your hourly rate, profit margin and the studio hours you really have each week.</li>
-          <li>Add your pieces with their price, direct costs and time. Estimates are fine. The calculator works out how many you can make in a month from your studio hours. The two examples show how it works.</li>
+          <li>Add your pieces with their price, direct costs and time. Estimates are fine. The calculator works out how many you can make in a month from your studio hours. Want to see how it works first? Choose <strong>Load an example</strong> at the top.</li>
           <li>See what each piece contributes in a month.</li>
           <li>In Goal check, see which pieces reach the income you'd love, and the price each one needs.</li>
           <li>Optional: plan a monthly mix of pieces and see whether it fits your studio hours and reaches your goal.</li>
@@ -608,22 +615,48 @@ footer { padding-top: 8px; }
   ];
 
   const exp = (name, amount, per = "month") => ({ id: uid(), name, amount, per });
-  const EXAMPLES = () => ({
-    settings: { rate: 30, margin: 10, cover: 60, tax: 0, hours: 20 },
+  // The calculator starts empty. Examples load only when asked, and match the companion guide.
+  const BLANK = () => ({
+    settings: { rate: "", margin: "", cover: "", tax: "", hours: "" },
     biz: [
-      exp("Additional insurance", 0, "year"), exp("Advertising", 0), exp("Dedicated phone line", 0),
-      exp("Marketing materials", 0), exp("Website & domain", 0), exp("Software & apps", 0)
+      exp("Website & domain", ""), exp("Software & apps", ""), exp("Additional insurance", "", "year"),
+      exp("Advertising", ""), exp("Marketing materials", ""), exp("Dedicated phone line", "")
     ],
     personal: [
-      exp("Rent or mortgage", 0), exp("Groceries", 0), exp("Utilities", 0), exp("Car & transport", 0),
-      exp("Phone & internet", 0), exp("Health insurance", 0), exp("Fun & extras", 0), exp("Savings", 0)
+      exp("Rent or mortgage", ""), exp("Groceries", ""), exp("Utilities", ""), exp("Car & transport", ""),
+      exp("Phone & internet", ""), exp("Health insurance", ""), exp("Fun & extras", ""), exp("Savings", "")
     ],
     selected: 0,
-    pieces: [
-      { id: uid(), name: "Painting (example)", price: 150, sold: 3, mix: 3, materials: 25, components: 5, firing: 0, packaging: 5, shipping: 0, other: 0, waste: 0, feePct: 6, fixedFee: 0.5, make: 4, finish: 1 },
-      { id: uid(), name: "Ornament (example)", price: 25, sold: 20, mix: 20, materials: 4, components: 0.5, firing: 0.5, packaging: 1, shipping: 0, other: 0, waste: 0, feePct: 6, fixedFee: 0.5, make: 0.2, finish: 0.1 }
+    pieces: [blankPiece(1)]
+  });
+  const EXAMPLE_BASE = () => ({
+    settings: { rate: 30, margin: 10, cover: 25, tax: 0, hours: 10 },
+    biz: [
+      exp("Website & domain", 20), exp("Software & apps", 15), exp("Additional insurance", 300, "year"),
+      exp("Advertising", ""), exp("Marketing materials", ""), exp("Dedicated phone line", "")
+    ],
+    personal: [
+      exp("Rent or mortgage", 1200), exp("Groceries", 400), exp("Utilities", 150), exp("Car & transport", 150),
+      exp("Phone & internet", 100), exp("Health insurance", ""), exp("Fun & extras", ""), exp("Savings", "")
     ]
   });
+  const EXAMPLE_PIECES = {
+    painting: () => ({ id: uid(), name: "Painting (example)", price: 150, sold: 3, mix: 3, materials: 25, components: 5, firing: 0, packaging: 5, shipping: 0, other: 0, waste: 0, feePct: 6, fixedFee: 0.5, make: 4, finish: 1 }),
+    ornament: () => ({ id: uid(), name: "Ornament (example)", price: 25, sold: 20, mix: 20, materials: 4, components: 0.5, firing: 0.5, packaging: 1, shipping: 0, other: 0, waste: 0, feePct: 6, fixedFee: 0.5, make: 0.2, finish: 0.1 })
+  };
+  const isBlankPiece = p => ["price", "materials", "components", "firing", "packaging", "shipping", "other", "make", "finish"].every(k => !String(p[k] ?? "").trim());
+  const nothingEntered = st => Object.values(st.settings).every(v => !String(v ?? "").trim())
+    && [...st.biz, ...st.personal].every(e => !String(e.amount ?? "").trim());
+  function loadExample(kind) {
+    // Fill Steps 1-3 with the guide's numbers only if they are still empty, so your own numbers are never overwritten.
+    if (nothingEntered(state)) Object.assign(state, EXAMPLE_BASE());
+    const piece = EXAMPLE_PIECES[kind]();
+    const have = state.pieces.findIndex(p => p.name === piece.name);
+    if (have >= 0) { state.selected = have; return; }
+    const blank = state.pieces.findIndex(isBlankPiece);
+    if (blank >= 0) { state.pieces[blank] = piece; state.selected = blank; }
+    else if (state.pieces.length < MAX_PIECES) { state.pieces.push(piece); state.selected = state.pieces.length - 1; }
+  }
 
   function uid() { return Math.random().toString(36).slice(2, 9); }
   function blankPiece(n) {
@@ -639,7 +672,7 @@ footer { padding-top: 8px; }
     try {
       const o = JSON.parse(localStorage.getItem(OLD_KEY));
       if (o && Array.isArray(o.pieces) && o.pieces.length) {
-        const s = EXAMPLES();
+        const s = BLANK();
         s.pieces = o.pieces; s.selected = o.selected || 0;
         s.settings.rate = o.settings.rate; s.settings.margin = o.settings.margin;
         s.biz = [exp("Business overhead", o.settings.overhead)];
@@ -648,7 +681,7 @@ footer { padding-top: 8px; }
         return s;
       }
     } catch (e) {}
-    return EXAMPLES();
+    return BLANK();
   }
   let state = load();
   function save() { try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {} }
@@ -946,9 +979,9 @@ footer { padding-top: 8px; }
 
   function renderReset() {
     $("reset-area").innerHTML = confirmReset
-      ? `<span class="confirm reset-confirm">Erase all your numbers and go back to the examples? <span class="confirm-btns"><button class="btn small" data-act="reset-yes">Yes, erase everything</button><button class="btn small ghost" data-act="reset-no">Cancel</button></span></span>`
+      ? `<span class="confirm reset-confirm">Erase all your numbers and start with empty boxes? <span class="confirm-btns"><button class="btn small" data-act="reset-yes">Yes, erase everything</button><button class="btn small ghost" data-act="reset-no">Cancel</button></span></span>`
       : justReset
-        ? `<span class="confirm reset-done" role="status">Cleared. You're back to the examples.</span>`
+        ? `<span class="confirm reset-done" role="status">Cleared. Every box is empty.</span>`
         : `<button class="btn" data-act="reset">Start over</button>`;
   }
 
@@ -1053,6 +1086,12 @@ footer { padding-top: 8px; }
   window.addEventListener("scroll", closeTip, { passive: true });
   window.addEventListener("resize", closeTip);
 
+  const exSel = $("example-pick");
+  exSel.addEventListener("change", () => {
+    if (!exSel.value) return;
+    loadExample(exSel.value); exSel.value = ""; save(); renderAll();
+  });
+
   const curSel = $("currency");
   curSel.value = CUR;
   document.querySelectorAll(".cur").forEach(el => { el.textContent = CUR; });
@@ -1115,7 +1154,7 @@ footer { padding-top: 8px; }
     else if (act === "reset") { confirmReset = true; renderReset(); }
     else if (act === "reset-no") { confirmReset = false; renderReset(); }
     else if (act === "reset-yes") {
-      state = EXAMPLES(); confirmReset = false; justReset = true; save(); renderAll();
+      state = BLANK(); confirmReset = false; justReset = true; save(); renderAll();
       window.scrollTo({ top: 0, behavior: "smooth" });
       setTimeout(() => { justReset = false; renderReset(); }, 3500);
     }
