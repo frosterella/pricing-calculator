@@ -120,7 +120,6 @@ header .lede { max-width: 58ch; margin-top: 10px; font-size: 16px; }
 .field { display: grid; gap: 4px; align-content: start; }
 .field label { font-weight: 700; font-size: 14px; }
 .field .hint { color: var(--muted); font-size: 13px; }
-.list-hint { color: var(--muted); font-size: 15px; margin: 0 0 10px; display: flex; align-items: center; gap: 6px; }
 .inbox { display: flex; align-items: center; background: var(--input); border: 1px solid var(--input-line); border-radius: 7px; overflow: hidden; min-width: 0; }
 .inbox:focus-within { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft); }
 .inbox span { padding: 0 8px; color: var(--muted); font-size: 14px; white-space: nowrap; }
@@ -479,10 +478,9 @@ footer { padding-top: 8px; }
     <div class="section-head"><span class="step c1" aria-hidden="true">1</span><div class="sh-text"><span class="eyebrow">Step 1</span><h2 id="personal-h">The income you'd love</h2><p>Start with why. List your personal monthly costs, then choose how much of them your art should pay for.</p></div></div>
     <div class="split">
       <div>
-        <p class="list-hint">Not sure what to include? <button type="button" class="tip" data-tip="persList" aria-label="What should I include?" aria-expanded="false">?</button></p>
         <div class="exp-list" id="list-personal"></div>
         <button class="exp-add" data-act="add-exp" data-list="personal">+ Add an expense</button>
-        <div class="total-line"><span>Personal expenses per month</span><strong id="personal-total"></strong></div>
+        <div class="total-line"><span>Personal expenses per month <button type="button" class="tip" data-tip="persList" aria-label="What should I include?" aria-expanded="false">?</button></span><strong id="personal-total"></strong></div>
       </div>
       <div class="cover">
         <div class="field">
@@ -506,7 +504,6 @@ footer { padding-top: 8px; }
     <div class="section-head"><span class="step c2" aria-hidden="true">2</span><div class="sh-text"><span class="eyebrow">Step 2</span><h2 id="biz-h">Your business expenses</h2><p>Costs you pay every month even if you sell nothing. Get them done now, so every price after this includes them.</p></div></div>
     <div class="split">
       <div>
-        <p class="list-hint">Not sure what to include? <button type="button" class="tip" data-tip="bizList" aria-label="What should I include?" aria-expanded="false">?</button></p>
         <div class="exp-list" id="list-biz"></div>
         <button class="exp-add" data-act="add-exp" data-list="biz">+ Add an expense</button>
         <div class="total-line"><span>Monthly business overhead <button type="button" class="tip" data-tip="overhead" aria-label="What does this mean?" aria-expanded="false">?</button></span><strong id="biz-total"></strong></div>
@@ -766,9 +763,8 @@ footer { padding-top: 8px; }
   const TIPS = {
     cover: ["How much should your art cover?", "Pick how much of your monthly bills you want your art to pay for.", "25% means your art pays one quarter of your bills. 100% means it pays all of them."],
     tax: ["Income tax", "If you will pay income tax on the money your art makes, add a percent here. Your goal goes up so you still have enough after tax.", "Not sure? Leave it at 0."],
-    persList: ["Not sure what to include?", "Take your time with the personal expenses checklist on page 19 of your guide. Tick what applies to you, then add it here.", "Paid once a year? Choose \"per year\" and the calculator works out the monthly amount."],
-    bizList: ["Not sure what to include?", "Take your time with the business expenses checklist on page 20 of your guide. The costs marked with a star are the ones artists often miss.", "Materials, packaging and selling fees go with each piece in Step 4. Home studio? Your rent and utilities are already in Step 1."],
-    overhead: ["Overhead", "Business costs you pay every month, even if you sell nothing. For example: your website, booth and market fees, insurance and ads.", "The calculator shares this cost out across the pieces you make."],
+    persList: ["Personal expenses", "Not sure what to include? Take your time with the personal expenses checklist on page 19 of your guide. Tick what applies to you, then add it here.", "Paid once a year? Choose \"per year\" and the calculator works out the monthly amount."],
+    overhead: ["Overhead", "Business costs you pay every month, even if you sell nothing. For example: your website, booth and market fees, insurance and ads.", "The calculator shares this cost out across the pieces you make. Not sure what to include? Take your time with the business expenses checklist on page 20 of your guide. The costs marked with a star are the ones artists often miss."],
     rate: ["Hourly rate", "Your ideal hourly pay for making your art. If you have staff, use what you'd pay someone to make the piece.", "Not sure? Start with your local minimum wage. Your profit comes on top of this."],
     margin: ["Profit margin", "A little extra on top of your costs and your pay. It builds savings and helps your business grow.", "10% to 20% is common."],
     hours: ["Studio hours", "All the hours you can give your art each week. Count making, cleaning up, photos, listing and packing.", "Be honest about the rest of your life too."],
