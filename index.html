@@ -164,6 +164,16 @@ select.per { font: inherit; font-size: 14px; color: var(--ink); background: var(
 .studio-note { padding: 18px 20px; background: var(--warn-soft); border-radius: var(--radius); display: grid; gap: 8px; font-size: 15px; }
 .studio-note h3 { color: var(--ink); }
 .studio-note ul { margin: 0; padding-left: 20px; display: grid; gap: 2px; }
+.sum-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin-bottom: 18px; }
+.sum-stat { background: var(--bg); border-radius: var(--radius); padding: 14px 16px; display: grid; gap: 2px; }
+.sum-stat .k { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+.sum-stat .v { font-family: var(--display); font-size: 26px; font-weight: 600; }
+.sum-stat .s { font-size: 15px; color: var(--muted); }
+.sum-answer { border-radius: var(--radius); padding: 16px 18px; margin-bottom: 18px; background: var(--bg); }
+.sum-answer.fits { background: var(--good-soft); } .sum-answer.over { background: var(--bad-soft); }
+.sum-answer .v { font-family: var(--display); font-size: 24px; font-weight: 600; margin-bottom: 4px; }
+.sum-answer.fits .v { color: var(--good); } .sum-answer.over .v { color: var(--bad); }
+.sum-todo { margin: 0; padding-left: 22px; display: grid; gap: 8px; font-size: 16.5px; }
 .next-step { position: relative; overflow: hidden; isolation: isolate; background: var(--mast); color: var(--mast-ink); border-radius: 22px; padding: clamp(22px, 4vw, 36px); display: grid; gap: 10px; }
 .next-step h2 { color: var(--mast-ink); padding-right: 70px; }
 .next-step p { max-width: 62ch; opacity: .9; font-size: 17px; }
@@ -575,6 +585,11 @@ footer { padding-top: 8px; }
     </div>
   </section>
 
+  <section class="panel summary" aria-labelledby="sum-h">
+    <div class="section-head"><span class="step c1" aria-hidden="true">★</span><div class="sh-text"><span class="eyebrow">Your summary</span><h2 id="sum-h">Where you are, and what to do next</h2><p>Everything from Steps 1 to 7 in one place.</p></div></div>
+    <div id="summary" aria-live="polite"></div>
+  </section>
+
   <section class="next-step" aria-labelledby="next-h">
     <span class="shape s-sun" aria-hidden="true"></span>
     <h2 id="next-h">Your next step: a plan to sell what you make</h2>
@@ -975,6 +990,61 @@ footer { padding-top: 8px; }
     }).join("");
   }
 
+  function renderSummary(c) {
+    const s = c.s, m = c.mix, live = c.live;
+    const el = $("summary"); if (!el) return;
+    if (s.goal <= 0 && !live.length) {
+      el.innerHTML = `<p class="note">Fill in Steps 1 to 4 and your summary appears here.</p>`;
+      return;
+    }
+    const count = v => live.filter(r => r.verdict === v).length;
+    const names = list => list.map(r => `<strong>${esc(r.p.name || "Untitled piece")}</strong>`).join(", ");
+    const loss = live.filter(r => r.belowMin);
+    const keepers = live.filter(r => r.verdict === "keeper");
+    const stats = `<div class="sum-grid">
+      <div class="sum-stat"><span class="k">Monthly income goal</span><span class="v num">${s.goal > 0 ? money(s.goal, 0) : "—"}</span><span class="s">${s.goal > 0 ? `Plus ${money(s.overhead, 0)} business expenses, so your art needs to leave ${money(c.need, 0)} a month.` : "Set it in Step 1."}</span></div>
+      <div class="sum-stat"><span class="k">Studio time</span><span class="v num">${s.hoursMonth > 0 ? hrs(s.hoursMonth) : "—"}</span><span class="s">${s.hoursMonth > 0 ? `a month (${hrs(s.hoursWeek)} a week)` : "Set it in Step 3."}</span></div>
+      <div class="sum-stat"><span class="k">Your pieces</span><span class="v num">${live.length}</span><span class="s">${live.length ? `${count("keeper")} Keeper, ${count("raise")} Raise the price, ${count("rethink")} Rethink${loss.length ? `. <span class="neg">${loss.length} losing money.</span>` : ""}` : "Add them in Step 4."}</span></div>
+    </div>`;
+
+    let answer = "";
+    const todo = [];
+    if (s.goal > 0 && m.pieces > 0) {
+      const fits = s.hoursMonth > 0 && m.hours <= s.hoursMonth + 1e-9;
+      const reaches = m.toward >= s.goal - 0.005;
+      const reachesPP = m.towardPP >= s.goal - 0.005;
+      const ok = reaches && fits;
+      const head = ok ? "Yes, your plan covers your monthly income goal."
+        : reaches ? "Your plan covers your goal, but not in the hours you have."
+        : "Not yet. Your plan doesn't cover your monthly income goal.";
+      const detail = `Your Step 7 plan of ${m.pieces.toLocaleString()} pieces puts <strong>${money(m.toward, 0)}</strong> toward your ${money(s.goal, 0)} monthly income goal` +
+        (reaches ? `, with ${money(m.toward - s.goal, 0)} to spare.` : `. That's ${money(s.goal - m.toward, 0)} short.`) +
+        (s.hoursMonth > 0 ? ` It takes ${hrs(m.hours)} of your ${hrs(s.hoursMonth)} studio hours.` : "");
+      answer = `<div class="sum-answer ${ok ? "fits" : "over"}"><div class="v">${head}</div><p>${detail}</p></div>`;
+      if (s.hoursMonth > 0 && !fits) todo.push(`Your plan needs ${hrs(m.hours - s.hoursMonth)} more than your studio hours. Make fewer pieces, choose faster ones, or add hours in Step 3.`);
+      if (!reaches && reachesPP) todo.push(`Raise your prices toward your Ideal Prices. At your Ideal Prices, this same plan would put ${money(m.towardPP, 0)} toward your goal, which covers it.`);
+      if (!reaches && !reachesPP) {
+        const spare = s.hoursMonth - m.hours;
+        const best = live.filter(r => r.hours > 0).map(r => ({ r, perHr: ((r.ppValid && r.pp > r.price ? r.leftAtPP : r.left)) / r.hours })).sort((a, b) => b.perHr - a.perHr)[0];
+        todo.push(`Even at your Ideal Prices, this plan is ${money(s.goal - m.towardPP, 0)} short of your goal.` +
+          (spare > 0.05 && best && Math.floor(spare / best.r.hours + 1e-9) > 0 ? (() => { const q = Math.floor(spare / best.r.hours + 1e-9), add = q * best.perHr * best.r.hours, gap = s.goal - m.towardPP;
+            return ` You have ${hrs(spare)} to spare. Your best earner is <strong>${esc(best.r.p.name || "Untitled piece")}</strong>: about ${q.toLocaleString()} more would add about ${money(add, 0)}${add >= gap - 0.005 ? ", enough to cover your goal, if you can sell them" : ". You'll still need more hours, a faster process, or pieces that earn more per hour"}.`; })()
+          : ` You'll need more studio hours, a faster process, or pieces that earn more per hour.`));
+      }
+    } else if (s.goal > 0) {
+      const alone = live.filter(r => r.perMonth && r.towardNow >= s.goal - 0.005);
+      answer = `<div class="sum-answer"><div class="v">Plan your month in Step 7</div><p>Type how many of each piece you'll make, and your summary will show whether your plan covers your monthly income goal.${alone.length ? ` On its own, ${names(alone)} could cover it (Step 6).` : ""}</p></div>`;
+    }
+
+    loss.forEach(r => todo.push(`Raise <strong>${esc(r.p.name || "Untitled piece")}</strong> to at least its Minimum Price of ${money(r.minPrice)}. At ${money(r.price)}, it loses money on every sale.`));
+    live.filter(r => !r.belowMin && r.verdict !== "keeper" && r.ppValid && r.pp > r.price + 0.005).forEach(r =>
+      todo.push(`Raise <strong>${esc(r.p.name || "Untitled piece")}</strong> from ${money(r.price)} toward its Ideal Price of ${money(r.pp)}` + (r.verdict === "rethink" ? `, find a faster way to make it, or keep it as a "love it" piece.` : `, or find a faster way to make it.`)));
+    if (keepers.length) todo.push(`Make more of your Keepers: ${names(keepers)}.`);
+    if (!todo.length && live.length) todo.push(`Your prices are in good shape. Next, make a plan to sell what you make.`);
+
+    el.innerHTML = stats + answer + (todo.length ? `<h3>What to do next</h3><ol class="sum-todo">${todo.map(t => `<li>${t}</li>`).join("")}</ol>` : "");
+  }
+
   function renderReset() {
     $("reset-area").innerHTML = confirmReset
       ? `<span class="confirm reset-confirm">Erase all your numbers and start with empty boxes? <span class="confirm-btns"><button class="btn small" data-act="reset-yes">Yes, erase everything</button><button class="btn small ghost" data-act="reset-no">Cancel</button></span></span>`
@@ -985,7 +1055,7 @@ footer { padding-top: 8px; }
 
   function renderOutputs() {
     const c = compute();
-    renderTotals(c); renderShelf(c); renderResults(c); renderMadeCalc(c); renderCompare(c); renderGoal(c); renderMixOutputs(c);
+    renderTotals(c); renderShelf(c); renderResults(c); renderMadeCalc(c); renderCompare(c); renderGoal(c); renderMixOutputs(c); renderSummary(c);
   }
   function renderMix() {
     $("mix-table").innerHTML = `
