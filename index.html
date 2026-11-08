@@ -173,6 +173,10 @@ select.per { font: inherit; font-size: 14px; color: var(--ink); background: var(
 .sum-answer.fits { background: var(--good-soft); } .sum-answer.over { background: var(--bad-soft); }
 .sum-answer .v { font-family: var(--display); font-size: 24px; font-weight: 600; margin-bottom: 4px; }
 .sum-answer.fits .v { color: var(--good); } .sum-answer.over .v { color: var(--bad); }
+.sum-outcome { border-left: 4px solid var(--teal); background: var(--bg); border-radius: 0 var(--radius) var(--radius) 0; padding: 14px 18px; margin-bottom: 18px; display: grid; gap: 6px; }
+.sum-outcome.fits { border-left-color: var(--good); } .sum-outcome.over { border-left-color: #E2A72E; }
+.sum-outcome h3 { font-size: 18px; text-transform: none; letter-spacing: 0; color: var(--ink); }
+.sum-outcome p { font-size: 16px; } .sum-outcome a { color: var(--teal); font-weight: 600; }
 .sum-todo { margin: 0; padding-left: 22px; display: grid; gap: 8px; font-size: 16.5px; }
 .next-step { position: relative; overflow: hidden; isolation: isolate; background: var(--mast); color: var(--mast-ink); border-radius: 22px; padding: clamp(22px, 4vw, 36px); display: grid; gap: 10px; }
 .next-step h2 { color: var(--mast-ink); padding-right: 70px; }
@@ -990,6 +994,9 @@ footer { padding-top: 8px; }
     }).join("");
   }
 
+  // Links for the summary. Leave empty to hide the link.
+  const QUIZ_URL = "";   // "Where should I sell my work?" quiz
+  const COACH_URL = "";  // book a one-on-one coaching call
   function renderSummary(c) {
     const s = c.s, m = c.mix, live = c.live;
     const el = $("summary"); if (!el) return;
@@ -1042,7 +1049,22 @@ footer { padding-top: 8px; }
     if (keepers.length) todo.push(`Make more of your Keepers: ${names(keepers)}.`);
     if (!todo.length && live.length) todo.push(`Your prices are in good shape. Next, make a plan to sell what you make.`);
 
-    el.innerHTML = stats + answer + (todo.length ? `<h3>What to do next</h3><ol class="sum-todo">${todo.map(t => `<li>${t}</li>`).join("")}</ol>` : "");
+    // The outcome: is the pricing working (every piece a Keeper), and does the plan cover the goal?
+    let outcome = "";
+    if (s.goal > 0 && m.pieces > 0 && live.length) {
+      const pricingWorks = live.every(r => r.verdict === "keeper");
+      const goalMet = m.toward >= s.goal - 0.005 && (s.hoursMonth <= 0 || m.hours <= s.hoursMonth + 1e-9);
+      const quiz = QUIZ_URL ? ` <a href="${QUIZ_URL}" target="_blank" rel="noopener">Take the "Where should I sell my work?" quiz</a> to find the best places to sell.` : "";
+      const coach = COACH_URL ? ` <a href="${COACH_URL}" target="_blank" rel="noopener">Book a one-on-one coaching call</a> and we'll work through it together.` : " Want some personal help? I offer one-on-one coaching calls, and we can work through it together.";
+      outcome = pricingWorks && goalMet
+        ? `<div class="sum-outcome fits"><h3>Your pricing works, and your plan covers your goal. Now go sell them!</h3><p>You've done the hard part. Your prices pay you properly, and your plan covers your monthly income goal. The calculator assumes you sell everything you make, so your next job is getting your work in front of the right buyers.${quiz}</p></div>`
+        : pricingWorks
+        ? `<div class="sum-outcome"><h3>Your pricing works, but even if you sold everything, it won't cover your monthly income goal.</h3><p>That's not a pricing problem. It's a plan problem, and you have options: make more pieces in the hours you have, raise your prices above your Ideal Price where buyers will pay it, add other products that sell well, or find a faster way to make what you already sell.${quiz}</p></div>`
+        : goalMet
+        ? `<div class="sum-outcome fits"><h3>Your plan covers your goal, but some pieces are underpriced.</h3><p>Good news: you're already covering your monthly income goal. Raising the pieces below their Ideal Price means more money for the same work. Then go sell them!${quiz}</p></div>`
+        : `<div class="sum-outcome over"><h3>Your pricing and your monthly income goal both need work. Don't be discouraged.</h3><p>This is amazing information to have. It's better to know now than to keep guessing. Selling means putting your work, at the right price, in front of the right buyer. If your prices are right but your work isn't selling, you may need to make something else that your market will buy, or find a new market.${coach}</p></div>`;
+    }
+    el.innerHTML = stats + answer + outcome + (todo.length ? `<h3>What to do next</h3><ol class="sum-todo">${todo.map(t => `<li>${t}</li>`).join("")}</ol>` : "");
   }
 
   function renderReset() {
