@@ -554,6 +554,7 @@ footer { padding-top: 8px; }
         <div class="lab"><label for="s-hours">Studio hours you can work each week</label><button type="button" class="tip" data-tip="hours" aria-label="What does this mean?" aria-expanded="false">?</button></div>
         <div class="inbox"><input id="s-hours" inputmode="decimal" data-setting="hours"><span>hours/week</span></div>
         <div class="hint">Making plus finishing, photos, listing and packing. Be honest about the rest of your life.</div>
+        <div class="hint" id="hours-month"></div>
       </div>
     </div>
   </section>
@@ -784,7 +785,7 @@ footer { padding-top: 8px; }
     overhead: ["Overhead", "Business costs you pay every month, even if you sell nothing. For example: your website, booth and market fees, insurance and ads.", "The calculator shares this cost out across the pieces you make. Not sure what to include? Take your time with the business expenses checklist on page 22 of your guide. The costs marked with a star are the ones artists often miss."],
     rate: ["Hourly rate", "Your ideal hourly pay for making your art. If you have staff, use what you'd pay someone to make the piece.", "Not sure? Start with your local minimum wage. Your profit comes on top of this."],
     margin: ["Profit margin", "A little extra on top of your costs and your pay. It builds savings and helps your business grow.", "10% to 20% is common."],
-    hours: ["Studio hours", "All the hours you can give your art each week. Count making, cleaning up, photos, listing and packing.", "Be honest about the rest of your life too."],
+    hours: ["Studio hours", "All the hours you can give your art each week. Count making, cleaning up, photos, listing and packing.", "Count only hands-on time. A month has about 4.3 weeks, so the calculator multiplies your weekly hours by 4.3."],
     materials: ["Materials & supplies", "What goes into one piece: glass, clay, paint, canvas, fabric, wood and so on.", "Buy in bulk? Take the cost of the whole sheet, roll or bag and divide it by how many pieces you get from it. Example: a $40 roll of canvas makes 8 paintings. $40 ÷ 8 = $5 a piece."],
     components: ["Components & hardware", "Small parts that go on the piece, like hooks, wire, findings, stands or frames.", "Bought a pack? Divide the pack price by how many parts are in it."],
     firing: ["Energy per piece", "The power or fuel it takes to make one piece, like a kiln, oven or heat gun.", "Fire, bake or cure several at once? Divide the cost of one full load by the number of pieces in it. Example: a $6 kiln load holds 12 ornaments. $6 ÷ 12 = $0.50 each. Don't track it? Leave it at 0."],
@@ -944,7 +945,7 @@ footer { padding-top: 8px; }
     const hours = n(current().make) + n(current().finish);
     el.innerHTML = !hours ? `<h3>Pieces you can make per month ${tip("perMonth")}</h3><p>Add the making and finishing time above to work this out.</p>`
       : !c.s.hoursWeek ? `<h3>Pieces you can make per month ${tip("perMonth")}</h3><p>Add your studio hours in <a href="#settings-h">Step 3</a> to work this out.</p>`
-      : `<h3>Pieces you can make per month ${tip("perMonth")}</h3><div class="made-num">${Math.floor(c.s.hoursMonth / hours + 1e-9).toLocaleString()}</div><p>${hrs(c.s.hoursWeek)} a week of studio time is about ${hrs(c.s.hoursMonth)} a month, ÷ ${hrs(hours)} per piece. We assume you sell what you make.</p>`;
+      : `<h3>Pieces you can make per month ${tip("perMonth")}</h3><div class="made-num">${Math.floor(c.s.hoursMonth / hours + 1e-9).toLocaleString()}</div><p>${hrs(c.s.hoursWeek)} a week × about 4.3 weeks in a month = ${hrs(c.s.hoursMonth)} a month, ÷ ${hrs(hours)} per piece. We assume you sell what you make.</p>`;
   }
 
   function renderCompare(c) {
@@ -1010,7 +1011,7 @@ footer { padding-top: 8px; }
     const keepers = live.filter(r => r.verdict === "keeper");
     const stats = `<div class="sum-grid">
       <div class="sum-stat"><span class="k">Monthly income goal</span><span class="v num">${s.goal > 0 ? money(s.goal, 0) : "—"}</span><span class="s">${s.goal > 0 ? `Plus ${money(s.overhead, 0)} business expenses, so your art needs to leave ${money(c.need, 0)} a month.` : "Set it in Step 1."}</span></div>
-      <div class="sum-stat"><span class="k">Studio time</span><span class="v num">${s.hoursMonth > 0 ? hrs(s.hoursMonth) : "—"}</span><span class="s">${s.hoursMonth > 0 ? `a month (${hrs(s.hoursWeek)} a week)` : "Set it in Step 3."}</span></div>
+      <div class="sum-stat"><span class="k">Studio time</span><span class="v num">${s.hoursMonth > 0 ? hrs(s.hoursMonth) : "—"}</span><span class="s">${s.hoursMonth > 0 ? `a month: ${hrs(s.hoursWeek)} a week × about 4.3 weeks in a month` : "Set it in Step 3."}</span></div>
       <div class="sum-stat"><span class="k">Your pieces</span><span class="v num">${live.length}</span><span class="s">${live.length ? `${count("keeper")} Keeper, ${count("raise")} Raise the price, ${count("rethink")} Rethink${loss.length ? `. <span class="neg">${loss.length} losing money.</span>` : ""}` : "Add them in Step 4."}</span></div>
     </div>`;
 
@@ -1078,6 +1079,7 @@ footer { padding-top: 8px; }
   function renderOutputs() {
     const c = compute();
     renderTotals(c); renderShelf(c); renderResults(c); renderMadeCalc(c); renderCompare(c); renderGoal(c); renderMixOutputs(c); renderSummary(c);
+    const hm = $("hours-month"); if (hm) hm.textContent = c.s.hoursMonth > 0 ? `That's about ${hrs(c.s.hoursMonth)} a month: ${hrs(c.s.hoursWeek)} a week × about 4.3 weeks in a month.` : "";
   }
   function renderMix() {
     $("mix-table").innerHTML = `
